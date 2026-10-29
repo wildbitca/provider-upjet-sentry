@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"sort"
+	"strings"
 	"testing"
 )
 
@@ -159,6 +160,102 @@ func TestExternalNameRoundTrip(t *testing.T) {
 			}
 			if gotEN != c.externalName {
 				t.Errorf("GetExternalNameFn = %q, want %q", gotEN, c.externalName)
+			}
+		})
+	}
+}
+
+// importStrings is the string `terraform import` must receive, per resource,
+// as required by the importers of jianyuan/sentry v0.15.8 (internal/provider
+// intresource.ImportState*Part* and sentry/importer.go). Resources not listed
+// here import with the same string they store as the state id.
+var importStrings = map[string]string{
+	"sentry_team":                      "acme/backend",
+	"sentry_project":                   "acme/web",
+	"sentry_organization_code_mapping": "acme/31",
+	"sentry_organization_repository":   "acme/github/12/88",
+	"sentry_key":                       "acme/web/keyid",
+	"sentry_project_symbol_source":     "acme/web/src1",
+	"sentry_issue_alert":               "acme/web/55",
+	"sentry_alert":                     "acme/66",
+	"sentry_notification_action":       "acme/77",
+	"sentry_cron_monitor":              "acme/101",
+	"sentry_metric_monitor":            "acme/102",
+	"sentry_uptime_monitor":            "acme/103",
+	"sentry_integration_opsgenie":      "acme/5/svc1",
+	"sentry_integration_pagerduty":     "acme/5/svc2",
+	"sentry_plugin":                    "acme/web/slack",
+}
+
+// importParams adds the extra parameters some importers need on top of the
+// contract parameters.
+var importParams = map[string]map[string]any{
+	"sentry_organization_repository": {"integration_type": "github", "integration_id": "12"},
+	"sentry_integration_opsgenie":    {"integration_id": "5"},
+	"sentry_integration_pagerduty":   {"integration_id": "5"},
+}
+
+// TestImportIDRoundTrip is the Observe-only/adoption contract: the string
+// handed to `terraform import` is the composite the provider importer expects,
+// while GetIDFn keeps returning the id the provider stores in state. It
+// regresses the v0.1.0 bug where a bare id was imported and the importer
+// rejected it.
+func TestImportIDRoundTrip(t *testing.T) {
+	ctx := context.Background()
+	for name, c := range contracts {
+		t.Run(name, func(t *testing.T) {
+			e := ExternalNameConfigs[name]
+			params := map[string]any{}
+			for k, v := range c.params {
+				params[k] = v
+			}
+			for k, v := range importParams[name] {
+				params[k] = v
+			}
+
+			stateID, err := e.GetIDFn(ctx, c.externalName, params, nil)
+			if err != nil {
+				t.Fatalf("GetIDFn: %v", err)
+			}
+			if c.stateID != "" && !strings.HasSuffix(stateID, c.stateID) {
+				t.Errorf("GetIDFn = %q, want the stored state id %q", stateID, c.stateID)
+			}
+
+			want, composite := importStrings[name]
+			if !composite {
+				if e.GetImportIDFn != nil {
+					got, err := e.GetImportIDFn(ctx, c.externalName, params, nil)
+					if err != nil || got != stateID {
+						t.Errorf("GetImportIDFn = %q, %v; want the state id %q", got, err, stateID)
+					}
+				}
+				return
+			}
+			if e.GetImportIDFn == nil {
+				t.Fatalf("GetImportIDFn is nil, the importer needs %q", want)
+			}
+			got, err := e.GetImportIDFn(ctx, c.externalName, params, nil)
+			if err != nil {
+				t.Fatalf("GetImportIDFn: %v", err)
+			}
+			if got != want {
+				t.Errorf("GetImportIDFn = %q, want %q", got, want)
+			}
+			// The importer stores the last path segment as the state id.
+			if last := got[strings.LastIndex(got, "/")+1:]; last != c.stateID {
+				t.Errorf("last import segment %q differs from the stored state id %q", last, c.stateID)
+			}
+			if stateID != c.stateID {
+				t.Errorf("GetIDFn = %q, must stay the bare state id %q", stateID, c.stateID)
+			}
+
+			empty, err := e.GetImportIDFn(ctx, "", params, nil)
+			if err != nil || empty != "" {
+				t.Errorf("GetImportIDFn with an empty external name = %q, %v; want an empty id so upjet creates the resource", empty, err)
+			}
+			delete(params, "organization")
+			if _, err := e.GetImportIDFn(ctx, c.externalName, params, nil); err == nil {
+				t.Error("GetImportIDFn without the organization parameter must fail")
 			}
 		})
 	}

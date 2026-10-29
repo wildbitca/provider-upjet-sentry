@@ -10,8 +10,8 @@ import (
 )
 
 // The two id-less singletons (ProjectOwnership, AllProjectsSpikeProtection)
-// only work if the upjet build in use never writes an empty Terraform id into
-// the synthetic state. These tests pin every piece of that assumption.
+// only work if the upjet build in use never writes an id into their synthetic
+// state. These tests pin every piece of that assumption.
 
 var idlessResources = map[string]string{
 	"sentry_project_ownership":             "ProjectOwnership",
@@ -113,57 +113,18 @@ func upjetSyntheticStateSource(t *testing.T) string {
 	return string(b)
 }
 
-// TestUpjetSkipsSyntheticStateWithoutID fails when the upjet build in use
-// regresses the empty-id handling: either the fork skips the synthetic state
-// when the Terraform id is empty, or patches/apply.sh has guarded the id write.
-func TestUpjetSkipsSyntheticStateWithoutID(t *testing.T) {
+// TestUpjetDoesNotWriteIDForIDLessResources pins how the upstream upjet build
+// keeps the synthetic state valid for the id-less singletons: EnsureTFState
+// writes `id` only when the Terraform schema has an `id` attribute (hasTFID, set
+// from WithHasIDAttribute). Upstream does NOT skip an empty id for resources
+// that do have one (crossplane/upjet#789), which matters for the
+// IdentifierFromProvider resources; see docs/architecture/spikes.md.
+func TestUpjetDoesNotWriteIDForIDLessResources(t *testing.T) {
 	src := upjetSyntheticStateSource(t)
-	skipsOnEmptyID := strings.Contains(src, `tfID == ""`)
-	guardsIDWrite := strings.Contains(src, `fp.hasTFID && tfID != ""`)
-	if !skipsOnEmptyID && !guardsIDWrite {
-		t.Fatal("upjet writes a synthetic state with an empty id: the id-less singletons (ProjectOwnership, AllProjectsSpikeProtection) would fail on Read; bump the fork or fix patches/apply.sh")
+	if !strings.Contains(src, "if fp.hasTFID {") {
+		t.Fatal("upjet no longer gates the synthetic state id on hasTFID: the id-less singletons (ProjectOwnership, AllProjectsSpikeProtection) would get an empty id; re-check the singleton external names")
 	}
-	if !strings.Contains(src, "hasTFID") {
-		t.Error("upjet no longer tracks id-less resources (hasTFID): re-check the singleton external names")
-	}
-}
-
-// TestApplyScriptPatchesAndIsIdempotent runs patches/apply.sh against a
-// minimal vendored tree that still has the unpatched line.
-func TestApplyScriptPatchesAndIsIdempotent(t *testing.T) {
-	script, err := filepath.Abs("../patches/apply.sh")
-	if err != nil {
-		t.Fatal(err)
-	}
-	dir := t.TempDir()
-	files := filepath.Join(dir, "vendor", "github.com", "crossplane", "upjet", "v2", "pkg", "terraform", "files.go")
-	if err := os.MkdirAll(filepath.Dir(files), 0o755); err != nil {
-		t.Fatal(err)
-	}
-	if err := os.WriteFile(files, []byte("package terraform\n\nfunc f() {\n\tif fp.hasTFID {\n\t\tbase[\"id\"] = tfID\n\t}\n}\n"), 0o644); err != nil {
-		t.Fatal(err)
-	}
-	run := func() string {
-		cmd := exec.CommandContext(t.Context(), "bash", script)
-		cmd.Dir = dir
-		out, err := cmd.CombinedOutput()
-		if err != nil {
-			t.Fatalf("apply.sh failed: %v\n%s", err, out)
-		}
-		b, err := os.ReadFile(files)
-		if err != nil {
-			t.Fatal(err)
-		}
-		return string(b)
-	}
-	first := run()
-	if !strings.Contains(first, `if fp.hasTFID && tfID != "" {`) {
-		t.Fatalf("apply.sh did not guard the empty id:\n%s", first)
-	}
-	if second := run(); second != first {
-		t.Errorf("apply.sh is not idempotent:\n%s", second)
-	}
-	if _, err := os.Stat(files + ".bak"); err == nil {
-		t.Error("apply.sh left a .bak file behind")
+	if !strings.Contains(src, "WithHasIDAttribute") {
+		t.Error("upjet no longer lets the store declare id-less resources (WithHasIDAttribute)")
 	}
 }
