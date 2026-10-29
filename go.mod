@@ -159,3 +159,5 @@ require (
 	sigs.k8s.io/randfill v1.0.0 // indirect
 	sigs.k8s.io/structured-merge-diff/v6 v6.4.2 // indirect
 )
+
+replace github.com/crossplane/upjet/v2 => github.com/wildbitca/upjet/v2 v2.5.1-wb.1

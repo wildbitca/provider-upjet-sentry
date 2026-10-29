@@ -12,7 +12,7 @@ kind: Provider
 metadata:
   name: provider-sentry-team
 spec:
-  package: xpkg.upbound.io/wildbitca/provider-sentry-team:v0.1.0
+  package: xpkg.upbound.io/wildbitca/provider-sentry-team:v1.0.0
 ```
 
 Installing a sub-provider installs `provider-family-sentry` automatically. Install only the groups you use: `organization`, `team`, `project`, `alert`, `monitor`, `integration`, `dashboard`.

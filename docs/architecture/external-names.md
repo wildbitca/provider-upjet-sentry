@@ -46,3 +46,5 @@ Verified against the importers of `jianyuan/sentry` v0.15.8 (`internal/provider/
 ## Known limitation: empty id in the first synthetic state
 
 For `IdentifierFromProvider` resources upjet 2.5.1 still writes `id = ""` into the first synthetic state (crossplane/upjet#789 is open). The provider then refreshes with an empty id before Create; see `spikes.md` section S6 for the measured effect.
+
+Re-confirmed 2026-10-29 against the v0.15.8 sources: the importers of alert, cron/metric/uptime monitor use `ImportState2Part` (strict `org/id`); the registry docs show a URL form for them, which is stale.

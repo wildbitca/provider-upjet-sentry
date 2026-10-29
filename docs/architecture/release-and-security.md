@@ -2,7 +2,7 @@
 
 ## Release flow
 
-1. `Tag` workflow (`workflow_dispatch` from `main` only, input `version` such as `v0.1.0`, validated as semver; runs under environment `production` and re-checks through the API that the dispatched commit is on `main` before it reads the App key) pushes an annotated tag using a short-lived GitHub App token (`vars.WILDBIT_CI_APP_ID`, `secrets.WILDBIT_CI_APP_KEY`); the default token is blocked by the tag ruleset.
+1. `Tag` workflow (`workflow_dispatch` from `main` only, input `version` such as `v1.0.0`, validated as semver; runs under environment `production` and re-checks through the API that the dispatched commit is on `main` before it reads the App key) pushes an annotated tag using a short-lived GitHub App token (`vars.WILDBIT_CI_APP_ID`, `secrets.WILDBIT_CI_APP_KEY`); the default token is blocked by the tag ruleset.
 2. `Publish` runs on tags `v*`: `prepare` (checks out `refs/tags/<version>`, requires the tag to be reachable from `main`; `workflow_dispatch` is only accepted from `main` or a release tag) -> `ensure-repos` -> `family-config` -> `family-subproviders` (matrix, seven groups, `max-parallel: 5`) -> `release`. Every job that reads `UPBOUND_TOKEN` runs under environment `production`, and every build job checks out the same tag ref. `scripts/check-workflows.sh` fails when a job reads a publishing secret outside that environment.
 3. `ensure-repos` creates the Upbound repositories only when they do not exist (the repository update API is rate limited) and fails fast when `UPBOUND_TOKEN` is missing.
 4. Platform: linux/amd64 only. Registry: `xpkg.upbound.io/wildbitca/`.
@@ -51,3 +51,7 @@ No `Co-Authored-By` or assistant attribution in commits or PR descriptions; comm
 - `.github/CODEOWNERS` assigns `@wildbitca/admin`; enable "Require review from Code Owners" in the branch ruleset.
 - How often the `production` environment protection fires per run (once per job) is unverified; see the secret scope note above.
 - Branch protection, tag ruleset, CodeQL, private vulnerability reporting and Dependabot alerts are GitHub settings and are configured at repository creation (T17).
+
+## Package icon
+
+`package/icon.svg`, `extensions/icons/icon.svg` and the `iconURI` data URI in `package/crossplane.yaml` use the Sentry glyph from `static/images/logo-sentry.svg` of https://github.com/getsentry/sentry (the asset behind https://sentry.io/branding/), white on the brand purple `#362d59`, viewBox 80x80. The Sentry source is licensed FSL-1.1-Apache-2.0, but the name and logo are trademarks of Functional Software, Inc. dba Sentry; this provider is not affiliated with or endorsed by Sentry, and the logo is used only to identify the product the provider manages. The marketplace icon comes from `up xpkg append --extensions-root=./extensions`; the inline `crossplane.yaml` heredocs in `publish.yml` do not carry `iconURI` (same as the sibling providers).

@@ -7,24 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-29
+
+First release. Wraps `jianyuan/sentry` v0.15.8 (OpenTofu 1.13.2) on Upjet v2.5.1 pinned to the `wildbitca/upjet` fork tag `v2.5.1-wb.1` (see `docs/architecture/upjet-fork.md`). The `0.1.0` entry below was never tagged or published; `1.0.0` supersedes it and is the first published version.
+
+### Breaking changes
+
+- Relative to the unpublished pre-release builds only (nothing was ever published): ProviderConfig API types moved to `apis/v2/core/v2` of `github.com/crossplane/crossplane/apis/v2`; conversion webhooks are registered when a certificate directory is configured; CRDs gain the additive `status.lastHandledReconcileAt` field. API groups and Kinds are the public contract from here on and will not be renamed within 1.x.
+- Migration note: there is nothing to migrate from a published release. Install `xpkg.upbound.io/wildbitca/provider-family-sentry:v1.0.0` or the per-group `provider-sentry-<group>:v1.0.0` packages. Anyone who built a pre-release from source must delete and reinstall its CRDs, and requires Crossplane v2.
+
 ### Changed
 
-- Upjet is now upstream `github.com/crossplane/upjet/v2` v2.5.1; the `wildbitca/upjet` fork `replace` is gone. `crossplane-runtime/v2` v2.4.0, new direct dependency `github.com/crossplane/crossplane/apis/v2` v2.4.1 (ProviderConfig API types moved to `apis/v2/core/v2`), Go 1.26.8, controller-gen v0.20, controller-runtime v0.25, client-go v0.37, terraform-plugin-sdk v2.40.1, terraform-plugin-framework v1.19.0, grpc v1.85.0.
+- Upjet is `github.com/crossplane/upjet/v2` v2.5.1 with a `replace` to `github.com/wildbitca/upjet/v2` v2.5.1-wb.1 (numeric state ids, no CEL for required dynamic parameters, empty-id guard). `crossplane-runtime/v2` v2.4.0, direct dependency `github.com/crossplane/crossplane/apis/v2` v2.4.1, Go 1.26.8, controller-gen v0.20, controller-runtime v0.25, client-go v0.37, terraform-plugin-sdk v2.40.1, terraform-plugin-framework v1.19.0, grpc v1.85.0.
 - OpenTofu 1.11.5 -> 1.13.2 (Makefile, publish workflow, docs). `jianyuan/sentry` stays at v0.15.8, the latest release.
-- The provider mains now register the generated conversion webhooks (`SetupWebhookWithManager_<group>`) when a certificate directory is configured.
-- CRDs gain the additive `status.lastHandledReconcileAt` field.
+- The provider mains register the generated conversion webhooks (`SetupWebhookWithManager_<group>`) when a certificate directory is configured.
+- Package icon is the official Sentry glyph (source and trademark notes in `docs/architecture/release-and-security.md`).
 
 ### Fixed
 
 - Observe-only and adoption imports no longer fail for resources whose Terraform importer needs a composite id while the state id is bare (`Team`, `Project`, `ProjectKey`, `IssueAlert`, `Alert`, `CronMonitor`, `MetricMonitor`, `UptimeMonitor`, `NotificationAction`, `OrganizationCodeMapping`, `OrganizationRepository`, `ProjectSymbolSource`, `IntegrationOpsgenie`, `IntegrationPagerduty`, `ProjectPlugin`). `ExternalName.GetImportIDFn` builds the composite string; `GetIDFn` stays bare.
+- First reconcile of `IdentifierFromProvider` resources no longer refreshes an empty id (fork empty-id guard, `docs/architecture/spikes.md` S6).
 
-### Removed
+## [0.1.0] - never released
 
-- The fork-only patches: numeric state ids, the CEL rule for required dynamic parameters, the dynamic envelope unwrap (none is exercised by this schema) and the empty-id guard (`patches/apply.sh`, `make vendor.patch`). See `docs/architecture/spikes.md` S6 for the open risk the guard leaves.
-
-## [0.1.0] - unreleased
-
-First version. Wraps `jianyuan/sentry` v0.15.8 (OpenTofu 1.11.5) with the Upjet fork `wildbitca/upjet` v2.2.7. Not tagged or published yet.
+Internal pre-release snapshot, folded into 1.0.0. Wrapped `jianyuan/sentry` v0.15.8 (OpenTofu 1.11.5) with the Upjet fork `wildbitca/upjet` v2.2.7.
 
 ### Added
 

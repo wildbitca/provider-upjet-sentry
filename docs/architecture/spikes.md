@@ -51,3 +51,5 @@ Setup: OpenTofu 1.13.2, `jianyuan/sentry` v0.15.8, a local HTTP server that answ
 Result: `tofu apply` refreshes the resource first and the provider calls `GET /api/0/projects/acme/web/keys//`, then fails with `Not found / No matching client key found`. The create step is never reached. The upjet CLI runtime runs `apply` with refresh on, so the same failure is expected on the first reconcile of the 12 `IdentifierFromProvider` resources against a real Sentry server (whose answer to `keys//` may differ, so this is **unverified live**).
 
 Consequence: the guard that lived in the fork (`fp.hasTFID && tfID != ""`) is the open risk of running on upstream only. Options, in order of preference: (1) land crossplane/upjet#789 upstream and bump; (2) validate live (create a throwaway `ProjectKey`) and, if it fails, re-add a one-line fork `replace`; (3) there is no in-repo workaround, since `WorkspaceStore` is a concrete type and `GetIDFn` cannot suppress the `id` write.
+
+Resolution (2026-10-29c): option (2) was taken in advance: `go.mod` pins `github.com/wildbitca/upjet/v2` v2.5.1-wb.1, which carries the guard (see [upjet-fork.md](upjet-fork.md)).

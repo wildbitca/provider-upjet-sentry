@@ -4,7 +4,7 @@
 
 It covers all 24 managed resources of the upstream provider, in a cluster-scoped and a namespaced API tree.
 
-> **Status: pre-release (0.1.0 not yet tagged).** Everything was verified offline (code generation, build, lint, unit tests, package build). Runtime behavior against a live Sentry organization is **unverified**: see [Known issues](#known-issues).
+> **Status: first stable release (v1.0.0).** Everything was verified offline (code generation, build, lint, unit tests, package build). Runtime behavior against a live Sentry organization is **unverified**: see [Known issues](#known-issues).
 
 ## Getting started
 
@@ -16,7 +16,7 @@ kind: Provider
 metadata:
   name: provider-sentry-project
 spec:
-  package: xpkg.upbound.io/wildbitca/provider-sentry-project:v0.1.0
+  package: xpkg.upbound.io/wildbitca/provider-sentry-project:v1.0.0
 ```
 
 ### Sub-providers
