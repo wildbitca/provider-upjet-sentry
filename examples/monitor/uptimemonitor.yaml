@@ -1,0 +1,16 @@
+apiVersion: monitor.upjet-sentry.upbound.io/v1alpha1
+kind: UptimeMonitor
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    name: Uptime check for example.com
+    environment: production
+    url: https://example.com
+    method: GET
+    intervalSeconds: 60
+    timeoutMs: 5000
+  providerConfigRef:
+    name: default

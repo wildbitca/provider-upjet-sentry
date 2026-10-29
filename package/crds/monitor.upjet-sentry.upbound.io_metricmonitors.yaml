@@ -1,0 +1,1125 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.20.0
+  name: metricmonitors.monitor.upjet-sentry.upbound.io
+spec:
+  group: monitor.upjet-sentry.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - upjet-sentry
+    kind: MetricMonitor
+    listKind: MetricMonitorList
+    plural: metricmonitors
+    singular: metricmonitor
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: MetricMonitor is the Schema for the MetricMonitors API. <no value>
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MetricMonitorSpec defines the desired state of MetricMonitor
+            properties:
+              deletionPolicy:
+                default: Delete
+                description: |-
+                  DeletionPolicy specifies what will happen to the underlying external
+                  when this managed resource is deleted - either "Delete" or "Orphan" the
+                  external resource.
+                  This field is planned to be deprecated in favor of the ManagementPolicies
+                  field in a future release. Currently, both could be set independently and
+                  non-default values would be honored if the feature flag is enabled.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                enum:
+                - Orphan
+                - Delete
+                type: string
+              forProvider:
+                properties:
+                  aggregate:
+                    description: Aggregate query to run on the metric.
+                    type: string
+                  conditionGroup:
+                    properties:
+                      conditions:
+                        items:
+                          properties:
+                            comparison:
+                              description: The value to compare against. Only required
+                                for types other than `anomaly_detection`.
+                              type: number
+                            comparisonSensitivity:
+                              description: 'Choose your level of anomaly responsiveness.
+                                Higher thresholds means alerts for most anomalies.
+                                Lower thresholds means alerts only for larger ones.
+                                Only required for `anomaly_detection` type. Valid
+                                values are: `low`, `medium`, and `high`.'
+                              type: string
+                            comparisonThresholdType:
+                              description: 'Decide if you want to be alerted to anomalies
+                                that are moving above, below, or in both directions
+                                in relation to your threshold. Only required for `anomaly_detection`
+                                type. Valid values are: `above`, `below`, and `above_and_below`.'
+                              type: string
+                            conditionResult:
+                              description: When the condition is met, the result will
+                                be set to this value.
+                              type: number
+                            type:
+                              description: 'The type of condition. Valid values are:
+                                `eq`, `gte`, `gt`, `lte`, `lt`, `ne`, `anomaly_detection`,
+                                `age_comparison`, `assigned_to`, `event_attribute`,
+                                `event_created_by_detector`, `event_seen_count`, `every_event`,
+                                `existing_high_priority_issue`, `first_seen_event`,
+                                `issue_category`, `issue_occurrences`, `issue_open_duration`,
+                                `issue_priority_deescalating`, `issue_priority_equals`,
+                                `issue_priority_greater_or_equal`, `issue_resolution_change`,
+                                `issue_resolved_trigger`, `issue_type`, `latest_adopted_release`,
+                                `latest_release`, `level`, `new_high_priority_issue`,
+                                `reappeared_event`, `regression_event`, `tagged_event`,
+                                `event_frequency_count`, `event_frequency_percent`,
+                                `event_unique_user_frequency_count`, `event_unique_user_frequency_percent`,
+                                `percent_sessions_count`, `percent_sessions_percent`,
+                                and `seer_activity_trigger`.'
+                              type: string
+                          type: object
+                        type: array
+                      logicType:
+                        description: 'The logic to apply to the conditions. `any`
+                          will evaluate all conditions, and return true if any of
+                          those are met. `any-short` will stop evaluating conditions
+                          as soon as one is met. `all` will evaluate all conditions,
+                          and return true if all of those are met. `none` will return
+                          true if none of the conditions are met, will return false
+                          immediately if any are met. Valid values are: `any`, `any-short`,
+                          `all`, and `none`.'
+                        type: string
+                    type: object
+                  dataset:
+                    description: 'Dataset to run the aggregate query on. Valid values
+                      are: `events`, `transactions`, `discover`, `outcomes`, `outcomes_raw`,
+                      `sessions`, `metrics`, `generic_metrics`, `replays`, `profiles`,
+                      `search_issues`, `functions`, `spans`, and `events_analytics_platform`.'
+                    type: string
+                  description:
+                    description: A description of the monitor. Will be used in the
+                      resulting issue.
+                    type: string
+                  enabled:
+                    description: Whether the monitor is enabled. Defaults to `true`.
+                    type: boolean
+                  environment:
+                    description: Environment to run the aggregate query on.
+                    type: string
+                  eventTypes:
+                    description: 'Event types to run the aggregate query on. Valid
+                      values are: `error`, `default`, `transaction`, `trace_item_span`,
+                      `trace_item_log`, and `trace_item_metric`.'
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  extrapolationMode:
+                    description: 'Extrapolation mode to use for the aggregate query.
+                      Valid values are: `unknown`, `none`, `client_and_server_weighted`,
+                      and `server_weighted`.'
+                    type: string
+                  issueDetection:
+                    properties:
+                      comparisonDelta:
+                        description: The comparison delta in seconds to use for the
+                          aggregate query. Only required for `percent` type.
+                        type: number
+                      type:
+                        description: '`static`: Threshold based monitor; `percent`:
+                          Change based monitor; `dynamic`: Dynamic monitor. Valid
+                          values are: `static`, `percent`, and `dynamic`.'
+                        type: string
+                    type: object
+                  name:
+                    description: The name of this monitor.
+                    type: string
+                  organization:
+                    description: The organization slug or internal ID to create the
+                      monitor for.
+                    type: string
+                  organizationRef:
+                    description: Reference to a Organization in organization to populate
+                      organization.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  organizationSelector:
+                    description: Selector for a Organization in organization to populate
+                      organization.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  owner:
+                    properties:
+                      teamId:
+                        description: The team internal ID to assign new issues to.
+                          Conflicts with `user_id`.
+                        type: string
+                      teamIdRef:
+                        description: Reference to a Team in team to populate teamId.
+                        properties:
+                          name:
+                            description: Name of the referenced object.
+                            type: string
+                          policy:
+                            description: Policies for referencing.
+                            properties:
+                              resolution:
+                                default: Required
+                                description: |-
+                                  Resolution specifies whether resolution of this reference is required.
+                                  The default is 'Required', which means the reconcile will fail if the
+                                  reference cannot be resolved. 'Optional' means this reference will be
+                                  a no-op if it cannot be resolved.
+                                enum:
+                                - Required
+                                - Optional
+                                type: string
+                              resolve:
+                                description: |-
+                                  Resolve specifies when this reference should be resolved. The default
+                                  is 'IfNotPresent', which will attempt to resolve the reference only when
+                                  the corresponding field is not present. Use 'Always' to resolve the
+                                  reference on every reconcile.
+                                enum:
+                                - Always
+                                - IfNotPresent
+                                type: string
+                            type: object
+                        required:
+                        - name
+                        type: object
+                      teamIdSelector:
+                        description: Selector for a Team in team to populate teamId.
+                        properties:
+                          matchControllerRef:
+                            description: |-
+                              MatchControllerRef ensures an object with the same controller reference
+                              as the selecting object is selected.
+                            type: boolean
+                          matchLabels:
+                            additionalProperties:
+                              type: string
+                            description: MatchLabels ensures an object with matching
+                              labels is selected.
+                            type: object
+                          policy:
+                            description: Policies for selection.
+                            properties:
+                              resolution:
+                                default: Required
+                                description: |-
+                                  Resolution specifies whether resolution of this reference is required.
+                                  The default is 'Required', which means the reconcile will fail if the
+                                  reference cannot be resolved. 'Optional' means this reference will be
+                                  a no-op if it cannot be resolved.
+                                enum:
+                                - Required
+                                - Optional
+                                type: string
+                              resolve:
+                                description: |-
+                                  Resolve specifies when this reference should be resolved. The default
+                                  is 'IfNotPresent', which will attempt to resolve the reference only when
+                                  the corresponding field is not present. Use 'Always' to resolve the
+                                  reference on every reconcile.
+                                enum:
+                                - Always
+                                - IfNotPresent
+                                type: string
+                            type: object
+                        type: object
+                      userId:
+                        description: The user ID to assign new issues to. Conflicts
+                          with `team_id`.
+                        type: string
+                    type: object
+                  project:
+                    description: The project slug or internal ID to create the monitor
+                      for.
+                    type: string
+                  projectRef:
+                    description: Reference to a Project in project to populate project.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  projectSelector:
+                    description: Selector for a Project in project to populate project.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  query:
+                    description: An event search query to subscribe to and monitor
+                      for alerts. For example, to filter transactions so that only
+                      those with status code 400 are included, you could use `http.status_code:400`.
+                    type: string
+                  queryType:
+                    description: 'The type of query. If no value is provided, `query_type`
+                      is set to the default for the specified `dataset.` Valid values
+                      are: `error`, `performance`, and `crash_rate`.'
+                    type: string
+                  timeWindowSeconds:
+                    description: The time window in seconds to use for the aggregate
+                      query.
+                    type: number
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  aggregate:
+                    description: Aggregate query to run on the metric.
+                    type: string
+                  conditionGroup:
+                    properties:
+                      conditions:
+                        items:
+                          properties:
+                            comparison:
+                              description: The value to compare against. Only required
+                                for types other than `anomaly_detection`.
+                              type: number
+                            comparisonSensitivity:
+                              description: 'Choose your level of anomaly responsiveness.
+                                Higher thresholds means alerts for most anomalies.
+                                Lower thresholds means alerts only for larger ones.
+                                Only required for `anomaly_detection` type. Valid
+                                values are: `low`, `medium`, and `high`.'
+                              type: string
+                            comparisonThresholdType:
+                              description: 'Decide if you want to be alerted to anomalies
+                                that are moving above, below, or in both directions
+                                in relation to your threshold. Only required for `anomaly_detection`
+                                type. Valid values are: `above`, `below`, and `above_and_below`.'
+                              type: string
+                            conditionResult:
+                              description: When the condition is met, the result will
+                                be set to this value.
+                              type: number
+                            type:
+                              description: 'The type of condition. Valid values are:
+                                `eq`, `gte`, `gt`, `lte`, `lt`, `ne`, `anomaly_detection`,
+                                `age_comparison`, `assigned_to`, `event_attribute`,
+                                `event_created_by_detector`, `event_seen_count`, `every_event`,
+                                `existing_high_priority_issue`, `first_seen_event`,
+                                `issue_category`, `issue_occurrences`, `issue_open_duration`,
+                                `issue_priority_deescalating`, `issue_priority_equals`,
+                                `issue_priority_greater_or_equal`, `issue_resolution_change`,
+                                `issue_resolved_trigger`, `issue_type`, `latest_adopted_release`,
+                                `latest_release`, `level`, `new_high_priority_issue`,
+                                `reappeared_event`, `regression_event`, `tagged_event`,
+                                `event_frequency_count`, `event_frequency_percent`,
+                                `event_unique_user_frequency_count`, `event_unique_user_frequency_percent`,
+                                `percent_sessions_count`, `percent_sessions_percent`,
+                                and `seer_activity_trigger`.'
+                              type: string
+                          type: object
+                        type: array
+                      logicType:
+                        description: 'The logic to apply to the conditions. `any`
+                          will evaluate all conditions, and return true if any of
+                          those are met. `any-short` will stop evaluating conditions
+                          as soon as one is met. `all` will evaluate all conditions,
+                          and return true if all of those are met. `none` will return
+                          true if none of the conditions are met, will return false
+                          immediately if any are met. Valid values are: `any`, `any-short`,
+                          `all`, and `none`.'
+                        type: string
+                    type: object
+                  dataset:
+                    description: 'Dataset to run the aggregate query on. Valid values
+                      are: `events`, `transactions`, `discover`, `outcomes`, `outcomes_raw`,
+                      `sessions`, `metrics`, `generic_metrics`, `replays`, `profiles`,
+                      `search_issues`, `functions`, `spans`, and `events_analytics_platform`.'
+                    type: string
+                  description:
+                    description: A description of the monitor. Will be used in the
+                      resulting issue.
+                    type: string
+                  enabled:
+                    description: Whether the monitor is enabled. Defaults to `true`.
+                    type: boolean
+                  environment:
+                    description: Environment to run the aggregate query on.
+                    type: string
+                  eventTypes:
+                    description: 'Event types to run the aggregate query on. Valid
+                      values are: `error`, `default`, `transaction`, `trace_item_span`,
+                      `trace_item_log`, and `trace_item_metric`.'
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  extrapolationMode:
+                    description: 'Extrapolation mode to use for the aggregate query.
+                      Valid values are: `unknown`, `none`, `client_and_server_weighted`,
+                      and `server_weighted`.'
+                    type: string
+                  issueDetection:
+                    properties:
+                      comparisonDelta:
+                        description: The comparison delta in seconds to use for the
+                          aggregate query. Only required for `percent` type.
+                        type: number
+                      type:
+                        description: '`static`: Threshold based monitor; `percent`:
+                          Change based monitor; `dynamic`: Dynamic monitor. Valid
+                          values are: `static`, `percent`, and `dynamic`.'
+                        type: string
+                    type: object
+                  name:
+                    description: The name of this monitor.
+                    type: string
+                  organization:
+                    description: The organization slug or internal ID to create the
+                      monitor for.
+                    type: string
+                  organizationRef:
+                    description: Reference to a Organization in organization to populate
+                      organization.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  organizationSelector:
+                    description: Selector for a Organization in organization to populate
+                      organization.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  owner:
+                    properties:
+                      teamId:
+                        description: The team internal ID to assign new issues to.
+                          Conflicts with `user_id`.
+                        type: string
+                      teamIdRef:
+                        description: Reference to a Team in team to populate teamId.
+                        properties:
+                          name:
+                            description: Name of the referenced object.
+                            type: string
+                          policy:
+                            description: Policies for referencing.
+                            properties:
+                              resolution:
+                                default: Required
+                                description: |-
+                                  Resolution specifies whether resolution of this reference is required.
+                                  The default is 'Required', which means the reconcile will fail if the
+                                  reference cannot be resolved. 'Optional' means this reference will be
+                                  a no-op if it cannot be resolved.
+                                enum:
+                                - Required
+                                - Optional
+                                type: string
+                              resolve:
+                                description: |-
+                                  Resolve specifies when this reference should be resolved. The default
+                                  is 'IfNotPresent', which will attempt to resolve the reference only when
+                                  the corresponding field is not present. Use 'Always' to resolve the
+                                  reference on every reconcile.
+                                enum:
+                                - Always
+                                - IfNotPresent
+                                type: string
+                            type: object
+                        required:
+                        - name
+                        type: object
+                      teamIdSelector:
+                        description: Selector for a Team in team to populate teamId.
+                        properties:
+                          matchControllerRef:
+                            description: |-
+                              MatchControllerRef ensures an object with the same controller reference
+                              as the selecting object is selected.
+                            type: boolean
+                          matchLabels:
+                            additionalProperties:
+                              type: string
+                            description: MatchLabels ensures an object with matching
+                              labels is selected.
+                            type: object
+                          policy:
+                            description: Policies for selection.
+                            properties:
+                              resolution:
+                                default: Required
+                                description: |-
+                                  Resolution specifies whether resolution of this reference is required.
+                                  The default is 'Required', which means the reconcile will fail if the
+                                  reference cannot be resolved. 'Optional' means this reference will be
+                                  a no-op if it cannot be resolved.
+                                enum:
+                                - Required
+                                - Optional
+                                type: string
+                              resolve:
+                                description: |-
+                                  Resolve specifies when this reference should be resolved. The default
+                                  is 'IfNotPresent', which will attempt to resolve the reference only when
+                                  the corresponding field is not present. Use 'Always' to resolve the
+                                  reference on every reconcile.
+                                enum:
+                                - Always
+                                - IfNotPresent
+                                type: string
+                            type: object
+                        type: object
+                      userId:
+                        description: The user ID to assign new issues to. Conflicts
+                          with `team_id`.
+                        type: string
+                    type: object
+                  project:
+                    description: The project slug or internal ID to create the monitor
+                      for.
+                    type: string
+                  projectRef:
+                    description: Reference to a Project in project to populate project.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  projectSelector:
+                    description: Selector for a Project in project to populate project.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  query:
+                    description: An event search query to subscribe to and monitor
+                      for alerts. For example, to filter transactions so that only
+                      those with status code 400 are included, you could use `http.status_code:400`.
+                    type: string
+                  queryType:
+                    description: 'The type of query. If no value is provided, `query_type`
+                      is set to the default for the specified `dataset.` Valid values
+                      are: `error`, `performance`, and `crash_rate`.'
+                    type: string
+                  timeWindowSeconds:
+                    description: The time window in seconds to use for the aggregate
+                      query.
+                    type: number
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  This field is planned to replace the DeletionPolicy field in a future
+                  release. Currently, both could be set independently and non-default
+                  values would be honored if the feature flag is enabled. If both are
+                  custom, the DeletionPolicy field will be ignored.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                  policy:
+                    description: Policies for referencing.
+                    properties:
+                      resolution:
+                        default: Required
+                        description: |-
+                          Resolution specifies whether resolution of this reference is required.
+                          The default is 'Required', which means the reconcile will fail if the
+                          reference cannot be resolved. 'Optional' means this reference will be
+                          a no-op if it cannot be resolved.
+                        enum:
+                        - Required
+                        - Optional
+                        type: string
+                      resolve:
+                        description: |-
+                          Resolve specifies when this reference should be resolved. The default
+                          is 'IfNotPresent', which will attempt to resolve the reference only when
+                          the corresponding field is not present. Use 'Always' to resolve the
+                          reference on every reconcile.
+                        enum:
+                        - Always
+                        - IfNotPresent
+                        type: string
+                    type: object
+                required:
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                  namespace:
+                    description: Namespace of the secret.
+                    type: string
+                required:
+                - name
+                - namespace
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.aggregate is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.aggregate)
+                || (has(self.initProvider) && has(self.initProvider.aggregate))'
+            - message: spec.forProvider.conditionGroup is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.conditionGroup)
+                || (has(self.initProvider) && has(self.initProvider.conditionGroup))'
+            - message: spec.forProvider.dataset is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.dataset)
+                || (has(self.initProvider) && has(self.initProvider.dataset))'
+            - message: spec.forProvider.eventTypes is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.eventTypes)
+                || (has(self.initProvider) && has(self.initProvider.eventTypes))'
+            - message: spec.forProvider.issueDetection is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.issueDetection)
+                || (has(self.initProvider) && has(self.initProvider.issueDetection))'
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+          status:
+            description: MetricMonitorStatus defines the observed state of MetricMonitor.
+            properties:
+              atProvider:
+                properties:
+                  aggregate:
+                    description: Aggregate query to run on the metric.
+                    type: string
+                  conditionGroup:
+                    properties:
+                      conditions:
+                        items:
+                          properties:
+                            comparison:
+                              description: The value to compare against. Only required
+                                for types other than `anomaly_detection`.
+                              type: number
+                            comparisonSensitivity:
+                              description: 'Choose your level of anomaly responsiveness.
+                                Higher thresholds means alerts for most anomalies.
+                                Lower thresholds means alerts only for larger ones.
+                                Only required for `anomaly_detection` type. Valid
+                                values are: `low`, `medium`, and `high`.'
+                              type: string
+                            comparisonThresholdType:
+                              description: 'Decide if you want to be alerted to anomalies
+                                that are moving above, below, or in both directions
+                                in relation to your threshold. Only required for `anomaly_detection`
+                                type. Valid values are: `above`, `below`, and `above_and_below`.'
+                              type: string
+                            conditionResult:
+                              description: When the condition is met, the result will
+                                be set to this value.
+                              type: number
+                            type:
+                              description: 'The type of condition. Valid values are:
+                                `eq`, `gte`, `gt`, `lte`, `lt`, `ne`, `anomaly_detection`,
+                                `age_comparison`, `assigned_to`, `event_attribute`,
+                                `event_created_by_detector`, `event_seen_count`, `every_event`,
+                                `existing_high_priority_issue`, `first_seen_event`,
+                                `issue_category`, `issue_occurrences`, `issue_open_duration`,
+                                `issue_priority_deescalating`, `issue_priority_equals`,
+                                `issue_priority_greater_or_equal`, `issue_resolution_change`,
+                                `issue_resolved_trigger`, `issue_type`, `latest_adopted_release`,
+                                `latest_release`, `level`, `new_high_priority_issue`,
+                                `reappeared_event`, `regression_event`, `tagged_event`,
+                                `event_frequency_count`, `event_frequency_percent`,
+                                `event_unique_user_frequency_count`, `event_unique_user_frequency_percent`,
+                                `percent_sessions_count`, `percent_sessions_percent`,
+                                and `seer_activity_trigger`.'
+                              type: string
+                          type: object
+                        type: array
+                      logicType:
+                        description: 'The logic to apply to the conditions. `any`
+                          will evaluate all conditions, and return true if any of
+                          those are met. `any-short` will stop evaluating conditions
+                          as soon as one is met. `all` will evaluate all conditions,
+                          and return true if all of those are met. `none` will return
+                          true if none of the conditions are met, will return false
+                          immediately if any are met. Valid values are: `any`, `any-short`,
+                          `all`, and `none`.'
+                        type: string
+                    type: object
+                  dataset:
+                    description: 'Dataset to run the aggregate query on. Valid values
+                      are: `events`, `transactions`, `discover`, `outcomes`, `outcomes_raw`,
+                      `sessions`, `metrics`, `generic_metrics`, `replays`, `profiles`,
+                      `search_issues`, `functions`, `spans`, and `events_analytics_platform`.'
+                    type: string
+                  description:
+                    description: A description of the monitor. Will be used in the
+                      resulting issue.
+                    type: string
+                  enabled:
+                    description: Whether the monitor is enabled. Defaults to `true`.
+                    type: boolean
+                  environment:
+                    description: Environment to run the aggregate query on.
+                    type: string
+                  eventTypes:
+                    description: 'Event types to run the aggregate query on. Valid
+                      values are: `error`, `default`, `transaction`, `trace_item_span`,
+                      `trace_item_log`, and `trace_item_metric`.'
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  extrapolationMode:
+                    description: 'Extrapolation mode to use for the aggregate query.
+                      Valid values are: `unknown`, `none`, `client_and_server_weighted`,
+                      and `server_weighted`.'
+                    type: string
+                  id:
+                    type: string
+                  issueDetection:
+                    properties:
+                      comparisonDelta:
+                        description: The comparison delta in seconds to use for the
+                          aggregate query. Only required for `percent` type.
+                        type: number
+                      type:
+                        description: '`static`: Threshold based monitor; `percent`:
+                          Change based monitor; `dynamic`: Dynamic monitor. Valid
+                          values are: `static`, `percent`, and `dynamic`.'
+                        type: string
+                    type: object
+                  name:
+                    description: The name of this monitor.
+                    type: string
+                  organization:
+                    description: The organization slug or internal ID to create the
+                      monitor for.
+                    type: string
+                  owner:
+                    properties:
+                      teamId:
+                        description: The team internal ID to assign new issues to.
+                          Conflicts with `user_id`.
+                        type: string
+                      userId:
+                        description: The user ID to assign new issues to. Conflicts
+                          with `team_id`.
+                        type: string
+                    type: object
+                  project:
+                    description: The project slug or internal ID to create the monitor
+                      for.
+                    type: string
+                  query:
+                    description: An event search query to subscribe to and monitor
+                      for alerts. For example, to filter transactions so that only
+                      those with status code 400 are included, you could use `http.status_code:400`.
+                    type: string
+                  queryType:
+                    description: 'The type of query. If no value is provided, `query_type`
+                      is set to the default for the specified `dataset.` Valid values
+                      are: `error`, `performance`, and `crash_rate`.'
+                    type: string
+                  timeWindowSeconds:
+                    description: The time window in seconds to use for the aggregate
+                      query.
+                    type: number
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

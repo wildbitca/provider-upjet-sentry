@@ -1,0 +1,11 @@
+apiVersion: project.upjet-sentry.upbound.io/v1alpha1
+kind: ProjectSpikeProtection
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    enabled: true
+  providerConfigRef:
+    name: default

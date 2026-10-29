@@ -1,0 +1,12 @@
+apiVersion: organization.upjet-sentry.upbound.io/v1alpha1
+kind: OrganizationRepository
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    integrationType: github
+    integrationId: "1234"
+    identifier: my-org/my-repo
+  providerConfigRef:
+    name: default

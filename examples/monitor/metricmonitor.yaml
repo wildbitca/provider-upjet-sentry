@@ -1,0 +1,29 @@
+apiVersion: monitor.upjet-sentry.upbound.io/v1alpha1
+kind: MetricMonitor
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    name: Error count threshold
+    aggregate: count()
+    dataset: events
+    eventTypes:
+      - default
+      - error
+    query: is:unresolved
+    queryType: error
+    timeWindowSeconds: 3600
+    conditionGroup:
+      conditions:
+        - type: gt
+          comparison: 100
+          conditionResult: 75
+        - type: lte
+          comparison: 100
+          conditionResult: 0
+    issueDetection:
+      type: static
+  providerConfigRef:
+    name: default

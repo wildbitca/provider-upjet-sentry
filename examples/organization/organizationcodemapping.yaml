@@ -1,0 +1,15 @@
+# integrationId, repositoryId and projectId are numeric ids from Sentry (project:
+# status.atProvider.internalId of a Project).
+apiVersion: organization.upjet-sentry.upbound.io/v1alpha1
+kind: OrganizationCodeMapping
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    integrationId: "1234"
+    repositoryId: "5678"
+    projectId: "9012"
+    defaultBranch: main
+  providerConfigRef:
+    name: default

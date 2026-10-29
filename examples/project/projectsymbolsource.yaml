@@ -1,0 +1,16 @@
+apiVersion: project.upjet-sentry.upbound.io/v1alpha1
+kind: ProjectSymbolSource
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    type: http
+    name: Symbol server
+    url: https://symbols.example.com
+    layout:
+      type: native
+      casing: default
+  providerConfigRef:
+    name: default

@@ -1,0 +1,976 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.20.0
+  name: projects.project.upjet-sentry.m.upbound.io
+spec:
+  group: project.upjet-sentry.m.upbound.io
+  names:
+    categories:
+    - crossplane
+    - managed
+    - upjet-sentry
+    kind: Project
+    listKind: ProjectList
+    plural: projects
+    singular: project
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.conditions[?(@.type=='Synced')].status
+      name: SYNCED
+      type: string
+    - jsonPath: .status.conditions[?(@.type=='Ready')].status
+      name: READY
+      type: string
+    - jsonPath: .metadata.annotations.crossplane\.io/external-name
+      name: EXTERNAL-NAME
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Project is the Schema for the Projects API. <no value>
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ProjectSpec defines the desired state of Project
+            properties:
+              forProvider:
+                properties:
+                  clientSecurity:
+                    properties:
+                      allowedDomains:
+                        description: 'A list of allowed domains. Examples: https://example.com,
+                          *, *.example.com, *:80.'
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      scrapeJavascript:
+                        description: Enable JavaScript source fetching. Allow Sentry
+                          to scrape missing JavaScript source context when possible.
+                        type: boolean
+                      securityTokenHeader:
+                        description: 'Security Token Header. Outbound requests matching
+                          Allowed Domains will have the header "{security_token_header}:
+                          {security_token}" appended.'
+                        type: string
+                      securityTokenSecretRef:
+                        description: 'Security Token. Outbound requests matching Allowed
+                          Domains will have the header "{security_token_header}: {security_token}"
+                          appended.'
+                        properties:
+                          key:
+                            type: string
+                          name:
+                            description: Name of the secret.
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      verifyTlsSsl:
+                        description: Verify TLS/SSL. Outbound requests will verify
+                          TLS (sometimes known as SSL) connections.
+                        type: boolean
+                    type: object
+                  defaultKey:
+                    description: Whether to create a default key on project creation.
+                      By default, Sentry will create a key for you. If you wish to
+                      manage keys manually, set this to false and create keys using
+                      the `sentry_key` resource. Note that this only takes effect
+                      on project creation, not on project update.
+                    type: boolean
+                  defaultRules:
+                    description: Whether to create a default issue alert. Defaults
+                      to true where the behavior is to alert the user on every new
+                      issue.
+                    type: boolean
+                  digestsMaxDelay:
+                    description: The maximum amount of time (in seconds) to wait between
+                      scheduling digests for delivery.
+                    type: number
+                  digestsMinDelay:
+                    description: The minimum amount of time (in seconds) to wait between
+                      scheduling digests for delivery after the initial scheduling.
+                    type: number
+                  filters:
+                    properties:
+                      blacklistedIps:
+                        description: Filter events from these IP addresses. (e.g.
+                          127.0.0.1 or 10.0.0.0/8)
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      errorMessages:
+                        description: 'Filter events by error messages. Allows [glob
+                          pattern matching](https://en.wikipedia.org/wiki/Glob_(programming)).
+                          (e.g. TypeError* or *: integer division or modulo by zero)'
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      releases:
+                        description: Filter events from these releases. Allows [glob
+                          pattern matching](https://en.wikipedia.org/wiki/Glob_(programming)).
+                          (e.g. 1.* or [!3].[0-9].*)
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                    type: object
+                  fingerprintingRules:
+                    description: This can be used to modify the fingerprint rules
+                      on the server with custom rules. Rules follow the pattern `matcher:glob
+                      -> fingerprint, values`. To learn more about fingerprint rules,
+                      [read the docs](https://docs.sentry.io/concepts/data-management/event-grouping/fingerprint-rules/).
+                    type: string
+                  groupingEnhancements:
+                    description: This can be used to enhance the grouping algorithm
+                      with custom rules. Rules follow the pattern `matcher:glob [v^]?[+-]flag`.
+                      To learn more about stack trace rules, [read the docs](https://docs.sentry.io/concepts/data-management/event-grouping/stack-trace-rules/).
+                    type: string
+                  highlightTags:
+                    description: A list of strings with tag keys to highlight on this
+                      project's issues. E.g. ['release', 'environment']
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  name:
+                    description: The name for the project.
+                    type: string
+                  organization:
+                    description: The organization of this resource.
+                    type: string
+                  organizationRef:
+                    description: Reference to a Organization in organization to populate
+                      organization.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      namespace:
+                        description: Namespace of the referenced object
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  organizationSelector:
+                    description: Selector for a Organization in organization to populate
+                      organization.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      namespace:
+                        description: Namespace for the selector
+                        type: string
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  platform:
+                    description: 'The platform for this project. Use `other` for platforms
+                      not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`,
+                      `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`,
+                      `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`,
+                      `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`,
+                      `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`,
+                      `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`,
+                      `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`,
+                      `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`,
+                      `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`,
+                      `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`,
+                      `javascript-react`, `javascript-react-router`, `javascript-remix`,
+                      `javascript-solid`, `javascript-solidstart`, `javascript-svelte`,
+                      `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`,
+                      `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`,
+                      `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`,
+                      `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`,
+                      `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`,
+                      `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`,
+                      `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`,
+                      `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`,
+                      `python-celery`, `python-chalice`, `python-django`, `python-falcon`,
+                      `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`,
+                      `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`,
+                      `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`,
+                      `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`,
+                      `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`,
+                      and `xbox`.'
+                    type: string
+                  resolveAge:
+                    description: Hours in which an issue is automatically resolve
+                      if not seen after this amount of time.
+                    type: number
+                  teams:
+                    description: The slugs of the teams to create the project for.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teamsRefs:
+                    description: References to Team in team to populate teams.
+                    items:
+                      description: A NamespacedReference to a named object.
+                      properties:
+                        name:
+                          description: Name of the referenced object.
+                          type: string
+                        namespace:
+                          description: Namespace of the referenced object
+                          type: string
+                        policy:
+                          description: Policies for referencing.
+                          properties:
+                            resolution:
+                              default: Required
+                              description: |-
+                                Resolution specifies whether resolution of this reference is required.
+                                The default is 'Required', which means the reconcile will fail if the
+                                reference cannot be resolved. 'Optional' means this reference will be
+                                a no-op if it cannot be resolved.
+                              enum:
+                              - Required
+                              - Optional
+                              type: string
+                            resolve:
+                              description: |-
+                                Resolve specifies when this reference should be resolved. The default
+                                is 'IfNotPresent', which will attempt to resolve the reference only when
+                                the corresponding field is not present. Use 'Always' to resolve the
+                                reference on every reconcile.
+                              enum:
+                              - Always
+                              - IfNotPresent
+                              type: string
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  teamsSelector:
+                    description: Selector for a list of Team in team to populate teams.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      namespace:
+                        description: Namespace for the selector
+                        type: string
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                type: object
+              initProvider:
+                description: |-
+                  THIS IS A BETA FIELD. It will be honored
+                  unless the Management Policies feature flag is disabled.
+                  InitProvider holds the same fields as ForProvider, with the exception
+                  of Identifier and other resource reference fields. The fields that are
+                  in InitProvider are merged into ForProvider when the resource is created.
+                  The same fields are also added to the terraform ignore_changes hook, to
+                  avoid updating them after creation. This is useful for fields that are
+                  required on creation, but we do not desire to update them after creation,
+                  for example because of an external controller is managing them, like an
+                  autoscaler.
+                properties:
+                  clientSecurity:
+                    properties:
+                      allowedDomains:
+                        description: 'A list of allowed domains. Examples: https://example.com,
+                          *, *.example.com, *:80.'
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      scrapeJavascript:
+                        description: Enable JavaScript source fetching. Allow Sentry
+                          to scrape missing JavaScript source context when possible.
+                        type: boolean
+                      securityTokenHeader:
+                        description: 'Security Token Header. Outbound requests matching
+                          Allowed Domains will have the header "{security_token_header}:
+                          {security_token}" appended.'
+                        type: string
+                      securityTokenSecretRef:
+                        description: 'Security Token. Outbound requests matching Allowed
+                          Domains will have the header "{security_token_header}: {security_token}"
+                          appended.'
+                        properties:
+                          key:
+                            type: string
+                          name:
+                            description: Name of the secret.
+                            type: string
+                        required:
+                        - key
+                        - name
+                        type: object
+                      verifyTlsSsl:
+                        description: Verify TLS/SSL. Outbound requests will verify
+                          TLS (sometimes known as SSL) connections.
+                        type: boolean
+                    type: object
+                  defaultKey:
+                    description: Whether to create a default key on project creation.
+                      By default, Sentry will create a key for you. If you wish to
+                      manage keys manually, set this to false and create keys using
+                      the `sentry_key` resource. Note that this only takes effect
+                      on project creation, not on project update.
+                    type: boolean
+                  defaultRules:
+                    description: Whether to create a default issue alert. Defaults
+                      to true where the behavior is to alert the user on every new
+                      issue.
+                    type: boolean
+                  digestsMaxDelay:
+                    description: The maximum amount of time (in seconds) to wait between
+                      scheduling digests for delivery.
+                    type: number
+                  digestsMinDelay:
+                    description: The minimum amount of time (in seconds) to wait between
+                      scheduling digests for delivery after the initial scheduling.
+                    type: number
+                  filters:
+                    properties:
+                      blacklistedIps:
+                        description: Filter events from these IP addresses. (e.g.
+                          127.0.0.1 or 10.0.0.0/8)
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      errorMessages:
+                        description: 'Filter events by error messages. Allows [glob
+                          pattern matching](https://en.wikipedia.org/wiki/Glob_(programming)).
+                          (e.g. TypeError* or *: integer division or modulo by zero)'
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      releases:
+                        description: Filter events from these releases. Allows [glob
+                          pattern matching](https://en.wikipedia.org/wiki/Glob_(programming)).
+                          (e.g. 1.* or [!3].[0-9].*)
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                    type: object
+                  fingerprintingRules:
+                    description: This can be used to modify the fingerprint rules
+                      on the server with custom rules. Rules follow the pattern `matcher:glob
+                      -> fingerprint, values`. To learn more about fingerprint rules,
+                      [read the docs](https://docs.sentry.io/concepts/data-management/event-grouping/fingerprint-rules/).
+                    type: string
+                  groupingEnhancements:
+                    description: This can be used to enhance the grouping algorithm
+                      with custom rules. Rules follow the pattern `matcher:glob [v^]?[+-]flag`.
+                      To learn more about stack trace rules, [read the docs](https://docs.sentry.io/concepts/data-management/event-grouping/stack-trace-rules/).
+                    type: string
+                  highlightTags:
+                    description: A list of strings with tag keys to highlight on this
+                      project's issues. E.g. ['release', 'environment']
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  name:
+                    description: The name for the project.
+                    type: string
+                  organization:
+                    description: The organization of this resource.
+                    type: string
+                  organizationRef:
+                    description: Reference to a Organization in organization to populate
+                      organization.
+                    properties:
+                      name:
+                        description: Name of the referenced object.
+                        type: string
+                      namespace:
+                        description: Namespace of the referenced object
+                        type: string
+                      policy:
+                        description: Policies for referencing.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    required:
+                    - name
+                    type: object
+                  organizationSelector:
+                    description: Selector for a Organization in organization to populate
+                      organization.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      namespace:
+                        description: Namespace for the selector
+                        type: string
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                  platform:
+                    description: 'The platform for this project. Use `other` for platforms
+                      not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`,
+                      `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`,
+                      `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`,
+                      `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`,
+                      `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`,
+                      `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`,
+                      `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`,
+                      `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`,
+                      `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`,
+                      `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`,
+                      `javascript-react`, `javascript-react-router`, `javascript-remix`,
+                      `javascript-solid`, `javascript-solidstart`, `javascript-svelte`,
+                      `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`,
+                      `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`,
+                      `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`,
+                      `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`,
+                      `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`,
+                      `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`,
+                      `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`,
+                      `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`,
+                      `python-celery`, `python-chalice`, `python-django`, `python-falcon`,
+                      `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`,
+                      `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`,
+                      `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`,
+                      `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`,
+                      `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`,
+                      and `xbox`.'
+                    type: string
+                  resolveAge:
+                    description: Hours in which an issue is automatically resolve
+                      if not seen after this amount of time.
+                    type: number
+                  teams:
+                    description: The slugs of the teams to create the project for.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  teamsRefs:
+                    description: References to Team in team to populate teams.
+                    items:
+                      description: A NamespacedReference to a named object.
+                      properties:
+                        name:
+                          description: Name of the referenced object.
+                          type: string
+                        namespace:
+                          description: Namespace of the referenced object
+                          type: string
+                        policy:
+                          description: Policies for referencing.
+                          properties:
+                            resolution:
+                              default: Required
+                              description: |-
+                                Resolution specifies whether resolution of this reference is required.
+                                The default is 'Required', which means the reconcile will fail if the
+                                reference cannot be resolved. 'Optional' means this reference will be
+                                a no-op if it cannot be resolved.
+                              enum:
+                              - Required
+                              - Optional
+                              type: string
+                            resolve:
+                              description: |-
+                                Resolve specifies when this reference should be resolved. The default
+                                is 'IfNotPresent', which will attempt to resolve the reference only when
+                                the corresponding field is not present. Use 'Always' to resolve the
+                                reference on every reconcile.
+                              enum:
+                              - Always
+                              - IfNotPresent
+                              type: string
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  teamsSelector:
+                    description: Selector for a list of Team in team to populate teams.
+                    properties:
+                      matchControllerRef:
+                        description: |-
+                          MatchControllerRef ensures an object with the same controller reference
+                          as the selecting object is selected.
+                        type: boolean
+                      matchLabels:
+                        additionalProperties:
+                          type: string
+                        description: MatchLabels ensures an object with matching labels
+                          is selected.
+                        type: object
+                      namespace:
+                        description: Namespace for the selector
+                        type: string
+                      policy:
+                        description: Policies for selection.
+                        properties:
+                          resolution:
+                            default: Required
+                            description: |-
+                              Resolution specifies whether resolution of this reference is required.
+                              The default is 'Required', which means the reconcile will fail if the
+                              reference cannot be resolved. 'Optional' means this reference will be
+                              a no-op if it cannot be resolved.
+                            enum:
+                            - Required
+                            - Optional
+                            type: string
+                          resolve:
+                            description: |-
+                              Resolve specifies when this reference should be resolved. The default
+                              is 'IfNotPresent', which will attempt to resolve the reference only when
+                              the corresponding field is not present. Use 'Always' to resolve the
+                              reference on every reconcile.
+                            enum:
+                            - Always
+                            - IfNotPresent
+                            type: string
+                        type: object
+                    type: object
+                type: object
+              managementPolicies:
+                default:
+                - '*'
+                description: |-
+                  THIS IS A BETA FIELD. It is on by default but can be opted out
+                  through a Crossplane feature flag.
+                  ManagementPolicies specify the array of actions Crossplane is allowed to
+                  take on the managed and external resources.
+                  See the design doc for more information: https://github.com/crossplane/crossplane/blob/499895a25d1a1a0ba1604944ef98ac7a1a71f197/design/design-doc-observe-only-resources.md?plain=1#L223
+                  and this one: https://github.com/crossplane/crossplane/blob/444267e84783136daa93568b364a5f01228cacbe/design/one-pager-ignore-changes.md
+                items:
+                  description: |-
+                    A ManagementAction represents an action that the Crossplane controllers
+                    can take on an external resource.
+                  enum:
+                  - Observe
+                  - Create
+                  - Update
+                  - Delete
+                  - LateInitialize
+                  - '*'
+                  type: string
+                type: array
+              providerConfigRef:
+                default:
+                  kind: ClusterProviderConfig
+                  name: default
+                description: |-
+                  ProviderConfigReference specifies how the provider that will be used to
+                  create, observe, update, and delete this managed resource should be
+                  configured.
+                properties:
+                  kind:
+                    description: Kind of the referenced object.
+                    type: string
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - kind
+                - name
+                type: object
+              writeConnectionSecretToRef:
+                description: |-
+                  WriteConnectionSecretToReference specifies the namespace and name of a
+                  Secret to which any connection details for this managed resource should
+                  be written. Connection details frequently include the endpoint, username,
+                  and password required to connect to the managed resource.
+                properties:
+                  name:
+                    description: Name of the secret.
+                    type: string
+                required:
+                - name
+                type: object
+            required:
+            - forProvider
+            type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
+            - message: spec.forProvider.platform is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.platform)
+                || (has(self.initProvider) && has(self.initProvider.platform))'
+          status:
+            description: ProjectStatus defines the observed state of Project.
+            properties:
+              atProvider:
+                properties:
+                  clientSecurity:
+                    properties:
+                      allowedDomains:
+                        description: 'A list of allowed domains. Examples: https://example.com,
+                          *, *.example.com, *:80.'
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      scrapeJavascript:
+                        description: Enable JavaScript source fetching. Allow Sentry
+                          to scrape missing JavaScript source context when possible.
+                        type: boolean
+                      securityTokenHeader:
+                        description: 'Security Token Header. Outbound requests matching
+                          Allowed Domains will have the header "{security_token_header}:
+                          {security_token}" appended.'
+                        type: string
+                      verifyTlsSsl:
+                        description: Verify TLS/SSL. Outbound requests will verify
+                          TLS (sometimes known as SSL) connections.
+                        type: boolean
+                    type: object
+                  defaultKey:
+                    description: Whether to create a default key on project creation.
+                      By default, Sentry will create a key for you. If you wish to
+                      manage keys manually, set this to false and create keys using
+                      the `sentry_key` resource. Note that this only takes effect
+                      on project creation, not on project update.
+                    type: boolean
+                  defaultRules:
+                    description: Whether to create a default issue alert. Defaults
+                      to true where the behavior is to alert the user on every new
+                      issue.
+                    type: boolean
+                  digestsMaxDelay:
+                    description: The maximum amount of time (in seconds) to wait between
+                      scheduling digests for delivery.
+                    type: number
+                  digestsMinDelay:
+                    description: The minimum amount of time (in seconds) to wait between
+                      scheduling digests for delivery after the initial scheduling.
+                    type: number
+                  features:
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  filters:
+                    properties:
+                      blacklistedIps:
+                        description: Filter events from these IP addresses. (e.g.
+                          127.0.0.1 or 10.0.0.0/8)
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      errorMessages:
+                        description: 'Filter events by error messages. Allows [glob
+                          pattern matching](https://en.wikipedia.org/wiki/Glob_(programming)).
+                          (e.g. TypeError* or *: integer division or modulo by zero)'
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                      releases:
+                        description: Filter events from these releases. Allows [glob
+                          pattern matching](https://en.wikipedia.org/wiki/Glob_(programming)).
+                          (e.g. 1.* or [!3].[0-9].*)
+                        items:
+                          type: string
+                        type: array
+                        x-kubernetes-list-type: set
+                    type: object
+                  fingerprintingRules:
+                    description: This can be used to modify the fingerprint rules
+                      on the server with custom rules. Rules follow the pattern `matcher:glob
+                      -> fingerprint, values`. To learn more about fingerprint rules,
+                      [read the docs](https://docs.sentry.io/concepts/data-management/event-grouping/fingerprint-rules/).
+                    type: string
+                  groupingEnhancements:
+                    description: This can be used to enhance the grouping algorithm
+                      with custom rules. Rules follow the pattern `matcher:glob [v^]?[+-]flag`.
+                      To learn more about stack trace rules, [read the docs](https://docs.sentry.io/concepts/data-management/event-grouping/stack-trace-rules/).
+                    type: string
+                  highlightTags:
+                    description: A list of strings with tag keys to highlight on this
+                      project's issues. E.g. ['release', 'environment']
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                  id:
+                    type: string
+                  internalId:
+                    description: The internal ID for this project.
+                    type: string
+                  name:
+                    description: The name for the project.
+                    type: string
+                  organization:
+                    description: The organization of this resource.
+                    type: string
+                  platform:
+                    description: 'The platform for this project. Use `other` for platforms
+                      not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`,
+                      `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`,
+                      `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`,
+                      `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`,
+                      `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`,
+                      `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`,
+                      `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`,
+                      `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`,
+                      `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`,
+                      `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`,
+                      `javascript-react`, `javascript-react-router`, `javascript-remix`,
+                      `javascript-solid`, `javascript-solidstart`, `javascript-svelte`,
+                      `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`,
+                      `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`,
+                      `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`,
+                      `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`,
+                      `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`,
+                      `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`,
+                      `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`,
+                      `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`,
+                      `python-celery`, `python-chalice`, `python-django`, `python-falcon`,
+                      `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`,
+                      `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`,
+                      `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`,
+                      `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`,
+                      `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`,
+                      and `xbox`.'
+                    type: string
+                  resolveAge:
+                    description: Hours in which an issue is automatically resolve
+                      if not seen after this amount of time.
+                    type: number
+                  teams:
+                    description: The slugs of the teams to create the project for.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: set
+                type: object
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        LastTransitionTime is the last time this condition transitioned from one
+                        status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        A Message containing details about this condition's last transition from
+                        one status to another, if any.
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        ObservedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      type: integer
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: |-
+                        Type of this condition. At most one of each condition type may apply to
+                        a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - type
+                x-kubernetes-list-type: map
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the latest metadata.generation
+                  which resulted in either a ready state, or stalled due to error
+                  it can not recover from without human intervention.
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

@@ -1,0 +1,22 @@
+apiVersion: monitor.upjet-sentry.m.upbound.io/v1alpha1
+kind: CronMonitor
+metadata:
+  name: example
+  namespace: default
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    name: Nightly job
+    checkinMarginMinutes: 1
+    failureIssueThreshold: 1
+    maxRuntimeMinutes: 30
+    recoveryThreshold: 30
+    schedule:
+      crontab: "0 0 * * *"
+    owner:
+      teamIdRef:
+        name: backend
+  providerConfigRef:
+    kind: ClusterProviderConfig
+    name: default

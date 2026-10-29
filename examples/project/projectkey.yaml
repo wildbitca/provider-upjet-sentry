@@ -1,0 +1,15 @@
+# The DSN and secret are published to the connection secret.
+apiVersion: project.upjet-sentry.upbound.io/v1alpha1
+kind: ProjectKey
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    name: Production
+  writeConnectionSecretToRef:
+    name: web-app-dsn
+    namespace: crossplane-system
+  providerConfigRef:
+    name: default

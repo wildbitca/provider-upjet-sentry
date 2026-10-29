@@ -1,0 +1,14 @@
+apiVersion: project.upjet-sentry.upbound.io/v1alpha1
+kind: ProjectOwnership
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    raw: "path:src/api/* #backend"
+    fallthrough: true
+    autoAssignment: Auto Assign to Issue Owner
+    codeownersAutoSync: false
+  providerConfigRef:
+    name: default

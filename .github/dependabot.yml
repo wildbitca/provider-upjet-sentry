@@ -1,0 +1,40 @@
+# Dependabot version updates for this provider. A Crossplane provider drags in the
+# Upjet SDK, crossplane-runtime and the wrapped Terraform provider: falling behind is
+# not cosmetic, it means diverging from the ecosystem the provider is supposed to track.
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    labels: [dependencies, ci]
+    groups:
+      actions:
+        update-types: [minor, patch]
+    cooldown:
+      default-days: 7
+
+  - package-ecosystem: docker
+    directory: /cluster/images/provider-upjet-sentry
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 2
+    labels: [dependencies]
+    cooldown:
+      default-days: 7

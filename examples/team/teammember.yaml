@@ -1,0 +1,13 @@
+# memberId is the organization member id; it can also be a reference to an
+# OrganizationMember (memberIdRef).
+apiVersion: team.upjet-sentry.upbound.io/v1alpha1
+kind: TeamMember
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    team: backend
+    memberId: "4321"
+  providerConfigRef:
+    name: default

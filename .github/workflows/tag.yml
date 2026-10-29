@@ -1,0 +1,79 @@
+name: Tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. v0.1.0)'
+        required: true
+      message:
+        description: 'Tag message'
+        required: false
+        default: ''
+
+# No contents:write here — the default GITHUB_TOKEN is blocked by the tag
+# ruleset anyway. We mint a short-lived GitHub App token (wildbit-ci) instead.
+# No static PAT.
+permissions:
+  contents: read
+
+jobs:
+  tag:
+    # Cheap early exit only: the check lives in the dispatched file, so the
+    # "Require main" step below re-verifies server-side before any secret is read.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ${{ fromJSON(vars.CI_RUNNER || '"ubuntu-24.04"') }}
+    # Holds WILDBIT_CI_APP_KEY, so it runs behind the production environment
+    # (deployment protection rules and branch restrictions apply).
+    environment: production
+    steps:
+      - name: Require main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REF: ${{ github.ref }}
+          GH_SHA: ${{ github.sha }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ "${GH_REF}" != "refs/heads/main" ]; then
+            echo "::error::tags are only cut from main, not '${GH_REF}'"
+            exit 1
+          fi
+          # Ask the API where the dispatched commit sits relative to main:
+          # it must be main's tip (identical) or already merged into it (behind).
+          status=$(gh api "repos/${GH_REPO}/compare/main...${GH_SHA}" --jq .status)
+          case "${status}" in
+            identical|behind) ;;
+            *) echo "::error::commit ${GH_SHA} is not on main (compare status: ${status})"; exit 1 ;;
+          esac
+      - name: Validate version
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if ! printf '%s' "${VERSION}" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'; then
+            echo "::error::version '${VERSION}' is not a semantic version such as v0.1.0"
+            exit 1
+          fi
+      - name: Mint GitHub App token (wildbit-ci)
+        id: app-token
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        with:
+          app-id: ${{ vars.WILDBIT_CI_APP_ID }}
+          private-key: ${{ secrets.WILDBIT_CI_APP_KEY }}
+          owner: wildbitca
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Create and push annotated tag
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+          MESSAGE: ${{ github.event.inputs.message }}
+          GIT_AUTHOR: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          git config user.name "${GIT_AUTHOR}[bot]"
+          git config user.email "${GIT_AUTHOR}[bot]@users.noreply.github.com"
+          git tag -a -m "${MESSAGE:-$VERSION}" -- "$VERSION"
+          git push origin "$VERSION"

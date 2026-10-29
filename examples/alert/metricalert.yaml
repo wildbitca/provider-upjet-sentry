@@ -1,0 +1,26 @@
+# targetIdentifier is the numeric internal id of the team (status.atProvider.internalId).
+apiVersion: alert.upjet-sentry.upbound.io/v1alpha1
+kind: MetricAlert
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    name: Error volume
+    dataset: events
+    query: ""
+    aggregate: count()
+    timeWindow: 60
+    thresholdType: 0
+    resolveThreshold: 0
+    trigger:
+      - label: critical
+        alertThreshold: 300
+        thresholdType: 0
+        action:
+          - type: email
+            targetType: team
+            targetIdentifier: "1234"
+  providerConfigRef:
+    name: default

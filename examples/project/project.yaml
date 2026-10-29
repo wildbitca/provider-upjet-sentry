@@ -1,0 +1,15 @@
+# The project slug is the external name and defaults to metadata.name. Treat it as
+# immutable.
+apiVersion: project.upjet-sentry.upbound.io/v1alpha1
+kind: Project
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    name: web-app
+    platform: javascript
+    teams:
+      - backend
+  providerConfigRef:
+    name: default

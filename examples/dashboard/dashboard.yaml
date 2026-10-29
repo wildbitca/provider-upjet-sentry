@@ -1,0 +1,26 @@
+apiVersion: dashboard.upjet-sentry.upbound.io/v1alpha1
+kind: Dashboard
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    title: Service overview
+    widget:
+      - title: Number of errors
+        displayType: big_number
+        interval: 5m
+        widgetType: error-events
+        query:
+          - fields: ["count()"]
+            aggregates: ["count()"]
+            conditions: ""
+            orderBy: count()
+        layout:
+          - x: 0
+            "y": 0
+            w: 1
+            h: 1
+            minH: 1
+  providerConfigRef:
+    name: default

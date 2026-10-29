@@ -1,0 +1,49 @@
+# Static analysis (SAST) of this provider's Go code.
+#
+# GitHub code scanning is free on public repositories, and this repository is public.
+#
+# Findings go to the repository's Security tab and do not break the build: `ci` remains
+# the only check that gates merges.
+name: codeql
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Mondays 07:00 UTC. The periodic sweep matters: CodeQL keeps improving its queries,
+    # so unchanged code can reveal a new finding months later.
+    - cron: '0 7 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: codeql
+    runs-on: ${{ fromJSON(vars.CI_RUNNER || '"ubuntu-24.04"') }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
+        with:
+          languages: go
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3

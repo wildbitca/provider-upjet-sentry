@@ -1,0 +1,16 @@
+# Failed creates can orphan actions upstream (#937, #960); see the README known issues.
+apiVersion: alert.upjet-sentry.upbound.io/v1alpha1
+kind: NotificationAction
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    triggerType: spike-protection
+    serviceType: sentry_notification
+    targetIdentifier: default
+    targetDisplay: default
+    projects:
+      - web-app
+  providerConfigRef:
+    name: default

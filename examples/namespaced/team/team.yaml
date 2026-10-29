@@ -1,0 +1,12 @@
+apiVersion: team.upjet-sentry.m.upbound.io/v1alpha1
+kind: Team
+metadata:
+  name: example
+  namespace: default
+spec:
+  forProvider:
+    organization: my-org
+    name: Backend
+  providerConfigRef:
+    kind: ClusterProviderConfig
+    name: default

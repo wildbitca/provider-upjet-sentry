@@ -1,0 +1,24 @@
+# Code owners. See
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Pair this file with a branch ruleset that enables "Require review from Code
+# Owners": the release pipeline, build inputs and vendored patches below must
+# never merge without an admin review.
+
+# Default owner for everything.
+*                       @wildbitca/admin
+
+# Release pipeline and repository automation.
+/.github/               @wildbitca/admin
+
+# Build, image and supply-chain inputs.
+/Makefile               @wildbitca/admin
+/cluster/               @wildbitca/admin
+/scripts/               @wildbitca/admin
+/patches/               @wildbitca/admin
+/hack/                  @wildbitca/admin
+/build                  @wildbitca/admin
+/.gitmodules            @wildbitca/admin
+/go.mod                 @wildbitca/admin
+/go.sum                 @wildbitca/admin
+/upbound.yaml           @wildbitca/admin

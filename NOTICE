@@ -1,0 +1,17 @@
+provider-upjet-sentry
+Copyright 2026 Wildbit
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It wraps, and the container images it builds redistribute, the unmodified
+binary of the Terraform provider jianyuan/terraform-provider-sentry
+(https://github.com/jianyuan/terraform-provider-sentry), which is licensed
+under the MIT License, Copyright (c) 2016 Jian Yuan Lee. Its license text is
+installed in the images at /usr/share/licenses/terraform-provider-sentry/LICENSE.
+
+Images also contain OpenTofu (https://opentofu.org, MPL-2.0), and the code is
+generated with Upjet (https://github.com/crossplane/upjet, Apache-2.0) through
+the wildbitca fork.
+
+Sentry is a trademark of Functional Software, Inc. This project is not
+affiliated with or endorsed by Sentry.

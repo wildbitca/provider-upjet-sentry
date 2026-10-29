@@ -1,0 +1,11 @@
+apiVersion: organization.upjet-sentry.upbound.io/v1alpha1
+kind: OrganizationMember
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    email: new.member@example.com
+    role: member
+  providerConfigRef:
+    name: default

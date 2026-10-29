@@ -1,0 +1,15 @@
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-family-sentry
+  annotations:
+    meta.crossplane.io/maintainer: "Wildbit"
+    meta.crossplane.io/source: "https://github.com/wildbitca/provider-upjet-sentry"
+    meta.crossplane.io/license: "Apache-2.0"
+    meta.crossplane.io/iconURI: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9Ijk2IiBmaWxsPSIjMzYyZDU5Ii8+PHBhdGggZD0iTTk2IDM5MiAyNTYgMTEybDE2MCAyODBoLTYyTDI1NiAyMjAgMTU4IDM5MnoiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIzNzIiIHI9IjI4IiBmaWxsPSIjZmZmIi8+PC9zdmc+Cg=="
+    meta.crossplane.io/description: "Upjet-based Crossplane provider family for Sentry. Shared ProviderConfig for all Sentry sub-providers."
+  labels:
+    pkg.crossplane.io/provider-family: provider-family-sentry
+spec:
+  capabilities:
+    - SafeStart

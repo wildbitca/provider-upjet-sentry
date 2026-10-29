@@ -1,0 +1,16 @@
+apiVersion: integration.upjet-sentry.m.upbound.io/v1alpha1
+kind: IntegrationOpsgenie
+metadata:
+  name: example
+  namespace: default
+spec:
+  forProvider:
+    organization: my-org
+    integrationId: "1234"
+    team: backend
+    integrationKeySecretRef:
+      name: opsgenie-key
+      key: integration-key
+  providerConfigRef:
+    kind: ClusterProviderConfig
+    name: default

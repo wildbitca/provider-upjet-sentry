@@ -1,0 +1,12 @@
+apiVersion: project.upjet-sentry.upbound.io/v1alpha1
+kind: ProjectInboundDataFilter
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    filterId: browser-extensions
+    active: true
+  providerConfigRef:
+    name: default

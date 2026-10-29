@@ -1,0 +1,23 @@
+# monitorIds are monitor ids (for example the external names of CronMonitor /
+# MetricMonitor / UptimeMonitor resources).
+apiVersion: alert.upjet-sentry.upbound.io/v1alpha1
+kind: Alert
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    name: Notify on new issues
+    frequencyMinutes: 1440
+    monitorIds:
+      - "1001"
+    triggerConditions:
+      - firstSeenEvent: {}
+    actionFilters:
+      - logicType: all
+        actions:
+          - email:
+              targetType: issue_owners
+              fallthroughType: AllMembers
+  providerConfigRef:
+    name: default

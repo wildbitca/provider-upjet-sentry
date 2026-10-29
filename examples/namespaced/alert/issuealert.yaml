@@ -1,0 +1,23 @@
+apiVersion: alert.upjet-sentry.m.upbound.io/v1alpha1
+kind: IssueAlert
+metadata:
+  name: example
+  namespace: default
+spec:
+  forProvider:
+    organization: my-org
+    project: web-app
+    name: Notify issue owners
+    actionMatch: any
+    filterMatch: any
+    frequency: 30
+    conditionsV2:
+      - firstSeenEvent: {}
+      - regressionEvent: {}
+    actionsV2:
+      - notifyEmail:
+          targetType: IssueOwners
+          fallthroughType: ActiveMembers
+  providerConfigRef:
+    kind: ClusterProviderConfig
+    name: default

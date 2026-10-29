@@ -1,0 +1,15 @@
+apiVersion: integration.upjet-sentry.upbound.io/v1alpha1
+kind: IntegrationPagerduty
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    integrationId: "1234"
+    service: Backend on-call
+    integrationKeySecretRef:
+      name: pagerduty-key
+      namespace: crossplane-system
+      key: integration-key
+  providerConfigRef:
+    name: default

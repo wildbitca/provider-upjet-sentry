@@ -1,0 +1,10 @@
+apiVersion: team.upjet-sentry.upbound.io/v1alpha1
+kind: Team
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    name: Backend
+  providerConfigRef:
+    name: default

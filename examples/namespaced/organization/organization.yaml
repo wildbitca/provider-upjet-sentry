@@ -1,0 +1,16 @@
+# Sentry SaaS does not allow arbitrary organization creation: observe an existing
+# organization (set the crossplane.io/external-name annotation to its slug) or use this on
+# self-hosted Sentry.
+apiVersion: organization.upjet-sentry.m.upbound.io/v1alpha1
+kind: Organization
+metadata:
+  name: example
+  namespace: default
+spec:
+  forProvider:
+    name: My Organization
+    agreeTerms: true
+  managementPolicies: ["Observe"]
+  providerConfigRef:
+    kind: ClusterProviderConfig
+    name: default

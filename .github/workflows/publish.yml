@@ -1,0 +1,462 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (for example v0.1.0); must match an existing tag"
+        required: true
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  GO_VERSION: '1.26'
+  DOCKER_BUILDX_VERSION: 'v0.30.1'
+  UPBOUND_REGISTRY: xpkg.upbound.io/wildbitca
+  OPENTOFU_VERSION: '1.11.5'
+  TERRAFORM_PROVIDER_SOURCE: jianyuan/sentry
+  TERRAFORM_PROVIDER_VERSION: '0.15.8'
+  TERRAFORM_PROVIDER_DOWNLOAD_NAME: terraform-provider-sentry
+  TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX: https://github.com/jianyuan/terraform-provider-sentry/releases/download/v0.15.8
+  TERRAFORM_NATIVE_PROVIDER_BINARY: terraform-provider-sentry_v0.15.8
+  # Pinned SHA-256 of the artifacts baked into the images (keep in sync with the Makefile).
+  OPENTOFU_SHA256_AMD64: '901121681e751574d739de5208cad059eddf9bd739b575745cf9e3c961b28a13'
+  OPENTOFU_SHA256_ARM64: '1b79f8fe3cbf7ac0540507bb6bd0ecab1675c78393bbf492867eaabb79840eec'
+  TERRAFORM_PROVIDER_SHA256_AMD64: '89cee74af02cbb524ff7cb56d9bd4db9e54d478dcb2fce930e775a23ef8a1e8a'
+  TERRAFORM_PROVIDER_SHA256_ARM64: '922e241c5da47ef5f7c00e440f39f138b85d48ad776bbb63871dc5b988e8055a'
+  TERRAFORM_PROVIDER_LICENSE_SHA256: '17e17df3775e2907abfc0e66cd0e9af02a01fca6accd96dbaf4928615f075d5a'
+  # Pinned Crossplane CLI; the checksum is the published crank.sha256 of this release.
+  CROSSPLANE_CLI_VERSION: 'v2.1.3'
+  CROSSPLANE_CLI_SHA256: 'fe3ac3abde4ed48df87583c2392f1a17cb968115f58511243dc29783c0350013'
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ${{ fromJSON(vars.CI_RUNNER || '"ubuntu-24.04"') }}
+    # Gates the entire release before any build/publish work starts: nothing
+    # downstream runs until the environment's deployment protection rules
+    # clear. CI already ran on the
+    # commit before it was tagged, so there is no test signal lost by gating
+    # here instead of a later job.
+    environment: production
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Resolve version
+        id: version
+        env:
+          GH_REF: ${{ github.ref }}
+          GH_REF_NAME: ${{ github.ref_name }}
+          GH_EVENT_NAME: ${{ github.event_name }}
+          GH_EVENT_INPUTS_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ "${GH_EVENT_NAME}" = "workflow_dispatch" ]; then
+            V="${GH_EVENT_INPUTS_VERSION}"
+            # Dispatch is only honoured from main or from a release tag.
+            case "${GH_REF}" in
+              refs/heads/main|refs/tags/v*) ;;
+              *) echo "::error::workflow_dispatch must run from main or a release tag, not '${GH_REF}'"; exit 1 ;;
+            esac
+          else
+            V="${GH_REF_NAME}"
+          fi
+          # The version ends up in an OCI tag, linker flags and a git tag: accept semver only.
+          if ! printf '%s' "${V}" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'; then
+            echo "::error::version '${V}' is not a semantic version such as v0.1.0"
+            exit 1
+          fi
+          echo "version=${V}" >> "$GITHUB_OUTPUT"
+
+      # Everything downstream checks out refs/tags/<version>. Make sure that
+      # ref is a real tag and that its commit is reachable from main, so a
+      # dispatch can never publish code from a feature branch.
+      - name: Checkout release tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ steps.version.outputs.version }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Require the tag to be on main
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git fetch --no-tags origin '+refs/heads/main:refs/remotes/origin/main'
+          if ! git merge-base --is-ancestor "refs/tags/${VERSION}^{commit}" refs/remotes/origin/main; then
+            echo "::error::tag ${VERSION} is not reachable from main"
+            exit 1
+          fi
+
+  # ── Ensure Upbound repos exist (parallel with builds) ─────────────────
+  ensure-repos:
+    runs-on: ${{ fromJSON(vars.CI_RUNNER || '"ubuntu-24.04"') }}
+    environment: production
+    needs: prepare
+    steps:
+      - name: Install up CLI
+        run: |
+          curl -fsSLo up "https://cli.upbound.io/stable/v0.54.0/bin/linux_amd64/up"
+          echo "99a666d01e92d7fb7f44bfc9baf436fc28247f6022faa11122b80f5b216bbf8f  up" | sha256sum -c -
+          chmod +x up
+          sudo mv up /usr/local/bin/up
+
+      - name: Require UPBOUND_TOKEN
+        env:
+          UPBOUND_TOKEN: ${{ secrets.UPBOUND_TOKEN }}
+        run: |
+          if [ -z "${UPBOUND_TOKEN}" ]; then
+            echo "::error::UPBOUND_TOKEN secret is not set. Add it in the repository/org secrets before publishing to xpkg.upbound.io/wildbitca."
+            exit 1
+          fi
+
+      - name: Authenticate with Upbound
+        env:
+          # up reads the token from UP_TOKEN, which keeps it out of the process arguments.
+          UP_TOKEN: ${{ secrets.UPBOUND_TOKEN }}
+        run: up login
+
+      - name: Ensure repos exist
+        run: |
+          REPOS=(
+            provider-family-sentry
+            provider-sentry-organization
+            provider-sentry-team
+            provider-sentry-project
+            provider-sentry-alert
+            provider-sentry-monitor
+            provider-sentry-integration
+            provider-sentry-dashboard
+          )
+          # Upbound rate-limits `up repository update`, so only touch a repo
+          # when it does not already exist. Existing public repos are left
+          # untouched to stay under the rate limit. A short retry absorbs
+          # transient "Rate Limit Exceeded" responses on create/update.
+          retry() {
+            local n=0
+            until "$@"; do
+              n=$((n + 1))
+              if [ "$n" -ge 5 ]; then
+                echo "command failed after $n attempts: $*" >&2
+                return 1
+              fi
+              echo "attempt $n failed, retrying in $((n * 15))s: $*" >&2
+              sleep $((n * 15))
+            done
+          }
+          for repo in "${REPOS[@]}"; do
+            if up repository get "$repo" >/dev/null 2>&1; then
+              echo "✓ $repo already exists"
+              continue
+            fi
+            echo "Creating $repo..."
+            retry up repository create "$repo"
+            retry up repository update --private=false --publish --force "$repo"
+            echo "✓ $repo created and published"
+          done
+
+  # ── Family config (ProviderConfig CRDs — must publish before sub-providers) ──
+  family-config:
+    runs-on: ${{ fromJSON(vars.CI_RUNNER || '"ubuntu-24.04"') }}
+    environment: production
+    needs: [prepare, ensure-repos]
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+    steps:
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with: { version: '${{ env.DOCKER_BUILDX_VERSION }}' }
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ needs.prepare.outputs.version }}
+          submodules: true
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with: { go-version: '${{ env.GO_VERSION }}' }
+
+      - run: make vendor vendor.check
+
+      - name: Install CLIs
+        run: |
+          curl -fsSLo up "https://cli.upbound.io/stable/v0.54.0/bin/linux_amd64/up"
+          echo "99a666d01e92d7fb7f44bfc9baf436fc28247f6022faa11122b80f5b216bbf8f  up" | sha256sum -c -
+          chmod +x up
+          sudo mv up /usr/local/bin/up
+          curl -fsSLo docker-credential-up "https://cli.upbound.io/stable/v0.54.0/bin/linux_amd64/docker-credential-up"
+          echo "336e7f4883d8c0b873f709febfae3ae9b6f60288ffb79a12cc9f0659e12066c9  docker-credential-up" | sha256sum -c -
+          chmod +x docker-credential-up
+          sudo mv docker-credential-up /usr/local/bin/docker-credential-up
+          curl -fsSLo crossplane "https://releases.crossplane.io/stable/${CROSSPLANE_CLI_VERSION}/bin/linux_amd64/crank"
+          echo "${CROSSPLANE_CLI_SHA256}  crossplane" | sha256sum -c -
+          chmod +x crossplane
+          sudo mv crossplane /usr/local/bin/crossplane
+
+      - name: Authenticate with Upbound
+        env:
+          UP_TOKEN: ${{ secrets.UPBOUND_TOKEN }}
+        run: |
+          up login
+          mkdir -p ~/.docker
+          config_file=~/.docker/config.json
+          if [ -f "$config_file" ]; then
+            jq '.credHelpers["xpkg.upbound.io"] = "up"' "$config_file" > "${config_file}.tmp" && mv "${config_file}.tmp" "$config_file"
+          else
+            echo '{"credHelpers":{"xpkg.upbound.io":"up"}}' > "$config_file"
+          fi
+
+      - name: Build binary
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+            -trimpath -installsuffix static \
+            -ldflags "-X github.com/wildbitca/provider-upjet-sentry/internal/version.Version=${VERSION} -s -w" \
+            -o _output/bin/linux_amd64/config \
+            ./cmd/provider/config/
+
+      - name: Build image and xpkg
+        run: |
+          REPO="provider-family-sentry"
+
+          BUILD_CTX=$(mktemp -d)
+          cp cluster/images/provider-upjet-sentry/Dockerfile "${BUILD_CTX}/"
+          cp cluster/images/provider-upjet-sentry/terraformrc.hcl "${BUILD_CTX}/"
+          cp -r _output/bin/ "${BUILD_CTX}/bin"
+
+          docker buildx build \
+            --platform linux/amd64 \
+            --build-arg SUBPACKAGE=config \
+            --build-arg OPENTOFU_VERSION="${OPENTOFU_VERSION}" \
+            --build-arg TERRAFORM_PROVIDER_SOURCE="${TERRAFORM_PROVIDER_SOURCE}" \
+            --build-arg TERRAFORM_PROVIDER_VERSION="${TERRAFORM_PROVIDER_VERSION}" \
+            --build-arg TERRAFORM_PROVIDER_DOWNLOAD_NAME="${TERRAFORM_PROVIDER_DOWNLOAD_NAME}" \
+            --build-arg TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX="${TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX}" \
+            --build-arg TERRAFORM_NATIVE_PROVIDER_BINARY="${TERRAFORM_NATIVE_PROVIDER_BINARY}" \
+            --build-arg OPENTOFU_SHA256_AMD64="${OPENTOFU_SHA256_AMD64}" \
+            --build-arg OPENTOFU_SHA256_ARM64="${OPENTOFU_SHA256_ARM64}" \
+            --build-arg TERRAFORM_PROVIDER_SHA256_AMD64="${TERRAFORM_PROVIDER_SHA256_AMD64}" \
+            --build-arg TERRAFORM_PROVIDER_SHA256_ARM64="${TERRAFORM_PROVIDER_SHA256_ARM64}" \
+            --build-arg TERRAFORM_PROVIDER_LICENSE_SHA256="${TERRAFORM_PROVIDER_LICENSE_SHA256}" \
+            -t "build-${REPO}:latest" --load \
+            "${BUILD_CTX}"
+
+          WORK_DIR=$(mktemp -d)
+          mkdir -p "${WORK_DIR}/crds"
+          cp package/crds/upjet-sentry.*.yaml "${WORK_DIR}/crds/"
+          test "$(find "${WORK_DIR}/crds/" -name '*.yaml' | wc -l)" -eq 5
+
+          cat > "${WORK_DIR}/crossplane.yaml" <<'YAML'
+          apiVersion: meta.pkg.crossplane.io/v1
+          kind: Provider
+          metadata:
+            name: provider-family-sentry
+            annotations:
+              meta.crossplane.io/maintainer: "Wildbit"
+              meta.crossplane.io/source: "https://github.com/wildbitca/provider-upjet-sentry"
+              meta.crossplane.io/license: "Apache-2.0"
+              meta.crossplane.io/description: "Upjet-based Crossplane provider family for Sentry. Shared ProviderConfig for all Sentry sub-providers."
+            labels:
+              pkg.crossplane.io/provider-family: provider-family-sentry
+          spec:
+            capabilities:
+              - SafeStart
+          YAML
+          sed -i 's/^          //' "${WORK_DIR}/crossplane.yaml"
+
+          crossplane xpkg build \
+            --embed-runtime-image="build-${REPO}:latest" \
+            --package-root="${WORK_DIR}" \
+            --package-file="${WORK_DIR}/${REPO}.xpkg"
+
+          up xpkg push "${UPBOUND_REGISTRY}/${REPO}:${VERSION}" \
+            -f "${WORK_DIR}/${REPO}.xpkg"
+
+          echo "Published: ${UPBOUND_REGISTRY}/${REPO}:${VERSION}"
+
+      - name: Append extensions
+        continue-on-error: true
+        run: |
+          up xpkg append --extensions-root=./extensions \
+            "${UPBOUND_REGISTRY}/provider-family-sentry:${VERSION}"
+
+  # ── Family sub-providers (one per API group, parallel after config) ──
+  family-subproviders:
+    runs-on: ${{ fromJSON(vars.CI_RUNNER || '"ubuntu-24.04"') }}
+    environment: production
+    needs: [prepare, family-config]
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+      SP: ${{ matrix.subpackage }}
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        subpackage:
+          - organization
+          - team
+          - project
+          - alert
+          - monitor
+          - integration
+          - dashboard
+    steps:
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+        with: { version: '${{ env.DOCKER_BUILDX_VERSION }}' }
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ needs.prepare.outputs.version }}
+          submodules: true
+          persist-credentials: false
+
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with: { go-version: '${{ env.GO_VERSION }}' }
+
+      - run: make vendor vendor.check
+
+      - name: Install CLIs
+        run: |
+          curl -fsSLo up "https://cli.upbound.io/stable/v0.54.0/bin/linux_amd64/up"
+          echo "99a666d01e92d7fb7f44bfc9baf436fc28247f6022faa11122b80f5b216bbf8f  up" | sha256sum -c -
+          chmod +x up
+          sudo mv up /usr/local/bin/up
+          curl -fsSLo docker-credential-up "https://cli.upbound.io/stable/v0.54.0/bin/linux_amd64/docker-credential-up"
+          echo "336e7f4883d8c0b873f709febfae3ae9b6f60288ffb79a12cc9f0659e12066c9  docker-credential-up" | sha256sum -c -
+          chmod +x docker-credential-up
+          sudo mv docker-credential-up /usr/local/bin/docker-credential-up
+          curl -fsSLo crossplane "https://releases.crossplane.io/stable/${CROSSPLANE_CLI_VERSION}/bin/linux_amd64/crank"
+          echo "${CROSSPLANE_CLI_SHA256}  crossplane" | sha256sum -c -
+          chmod +x crossplane
+          sudo mv crossplane /usr/local/bin/crossplane
+
+      - name: Authenticate with Upbound
+        env:
+          UP_TOKEN: ${{ secrets.UPBOUND_TOKEN }}
+        run: |
+          up login
+          mkdir -p ~/.docker
+          config_file=~/.docker/config.json
+          if [ -f "$config_file" ]; then
+            jq '.credHelpers["xpkg.upbound.io"] = "up"' "$config_file" > "${config_file}.tmp" && mv "${config_file}.tmp" "$config_file"
+          else
+            echo '{"credHelpers":{"xpkg.upbound.io":"up"}}' > "$config_file"
+          fi
+
+      - name: Build binary
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
+            -trimpath -installsuffix static \
+            -ldflags "-X github.com/wildbitca/provider-upjet-sentry/internal/version.Version=${VERSION} -s -w" \
+            -o "_output/bin/linux_amd64/${SP}" \
+            "./cmd/provider/${SP}/"
+
+      - name: Build image, xpkg and publish
+        run: |
+          REPO="provider-sentry-${SP}"
+
+          BUILD_CTX=$(mktemp -d)
+          cp cluster/images/provider-upjet-sentry/Dockerfile "${BUILD_CTX}/"
+          cp cluster/images/provider-upjet-sentry/terraformrc.hcl "${BUILD_CTX}/"
+          cp -r _output/bin/ "${BUILD_CTX}/bin"
+
+          docker buildx build \
+            --platform linux/amd64 \
+            --build-arg SUBPACKAGE="${SP}" \
+            --build-arg OPENTOFU_VERSION="${OPENTOFU_VERSION}" \
+            --build-arg TERRAFORM_PROVIDER_SOURCE="${TERRAFORM_PROVIDER_SOURCE}" \
+            --build-arg TERRAFORM_PROVIDER_VERSION="${TERRAFORM_PROVIDER_VERSION}" \
+            --build-arg TERRAFORM_PROVIDER_DOWNLOAD_NAME="${TERRAFORM_PROVIDER_DOWNLOAD_NAME}" \
+            --build-arg TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX="${TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX}" \
+            --build-arg TERRAFORM_NATIVE_PROVIDER_BINARY="${TERRAFORM_NATIVE_PROVIDER_BINARY}" \
+            --build-arg OPENTOFU_SHA256_AMD64="${OPENTOFU_SHA256_AMD64}" \
+            --build-arg OPENTOFU_SHA256_ARM64="${OPENTOFU_SHA256_ARM64}" \
+            --build-arg TERRAFORM_PROVIDER_SHA256_AMD64="${TERRAFORM_PROVIDER_SHA256_AMD64}" \
+            --build-arg TERRAFORM_PROVIDER_SHA256_ARM64="${TERRAFORM_PROVIDER_SHA256_ARM64}" \
+            --build-arg TERRAFORM_PROVIDER_LICENSE_SHA256="${TERRAFORM_PROVIDER_LICENSE_SHA256}" \
+            -t "build-${REPO}:latest" --load \
+            "${BUILD_CTX}"
+
+          WORK_DIR=$(mktemp -d)
+          mkdir -p "${WORK_DIR}/crds"
+          cp "package/crds/${SP}".upjet-sentry.*.yaml "${WORK_DIR}/crds/"
+
+          CRD_COUNT=$(find "${WORK_DIR}/crds/" -name '*.yaml' | wc -l)
+          echo "${SP}: ${CRD_COUNT} CRDs"
+          if [ "${CRD_COUNT}" -eq 0 ]; then
+            echo "::error::no CRDs found for ${SP}"
+            exit 1
+          fi
+
+          cat > "${WORK_DIR}/crossplane.yaml" <<YAML
+          apiVersion: meta.pkg.crossplane.io/v1
+          kind: Provider
+          metadata:
+            name: ${REPO}
+            annotations:
+              meta.crossplane.io/maintainer: "Wildbit"
+              meta.crossplane.io/source: "https://github.com/wildbitca/provider-upjet-sentry"
+              meta.crossplane.io/license: "Apache-2.0"
+              meta.crossplane.io/description: "Crossplane provider for Sentry ${SP} resources. Part of provider-family-sentry."
+            labels:
+              pkg.crossplane.io/provider-family: provider-family-sentry
+          spec:
+            dependsOn:
+              - provider: ${UPBOUND_REGISTRY}/provider-family-sentry
+                version: ">= ${VERSION}"
+            capabilities:
+              - SafeStart
+          YAML
+          sed -i 's/^          //' "${WORK_DIR}/crossplane.yaml"
+
+          crossplane xpkg build \
+            --embed-runtime-image="build-${REPO}:latest" \
+            --package-root="${WORK_DIR}" \
+            --package-file="${WORK_DIR}/${REPO}.xpkg"
+
+          up xpkg push "${UPBOUND_REGISTRY}/${REPO}:${VERSION}" \
+            -f "${WORK_DIR}/${REPO}.xpkg"
+
+          echo "Published: ${UPBOUND_REGISTRY}/${REPO}:${VERSION}"
+
+      - name: Append extensions
+        continue-on-error: true
+        run: |
+          up xpkg append --extensions-root=./extensions \
+            "${UPBOUND_REGISTRY}/provider-sentry-${SP}:${VERSION}"
+
+  # ── GitHub Release ────────────────────────────────────────────────────
+  release:
+    runs-on: ${{ fromJSON(vars.CI_RUNNER || '"ubuntu-24.04"') }}
+    needs: [prepare, family-subproviders]
+    if: always() && needs.family-subproviders.result == 'success'
+    permissions:
+      contents: write  # gh release create
+    env:
+      VERSION: ${{ needs.prepare.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ needs.prepare.outputs.version }}
+          persist-credentials: false
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${VERSION}" >/dev/null 2>&1; then
+            echo "Release ${VERSION} already exists"
+          else
+            gh release create "${VERSION}" \
+              --verify-tag \
+              --title "${VERSION}" \
+              --generate-notes
+          fi
