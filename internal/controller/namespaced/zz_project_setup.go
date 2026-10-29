@@ -58,3 +58,22 @@ func SetupGated_project(mgr ctrl.Manager, o controller.Options) error {
 	}
 	return nil
 }
+
+// SetupWebhookWithManager_project registers conversion webhooks for all resource kinds in the group.
+func SetupWebhookWithManager_project(mgr ctrl.Manager) error {
+	for _, setup := range []func(ctrl.Manager) error{
+		allprojectsspikeprotection.SetupWebhookWithManager,
+		project.SetupWebhookWithManager,
+		projectinbounddatafilter.SetupWebhookWithManager,
+		projectkey.SetupWebhookWithManager,
+		projectownership.SetupWebhookWithManager,
+		projectplugin.SetupWebhookWithManager,
+		projectspikeprotection.SetupWebhookWithManager,
+		projectsymbolsource.SetupWebhookWithManager,
+	} {
+		if err := setup(mgr); err != nil {
+			return err
+		}
+	}
+	return nil
+}

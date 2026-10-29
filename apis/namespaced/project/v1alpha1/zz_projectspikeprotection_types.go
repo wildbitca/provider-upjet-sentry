@@ -10,8 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type ProjectSpikeProtectionInitParameters struct {
@@ -25,11 +24,11 @@ type ProjectSpikeProtectionInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The project of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/project/v1alpha1.Project
@@ -37,11 +36,11 @@ type ProjectSpikeProtectionInitParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
 }
 
 type ProjectSpikeProtectionObservation struct {
@@ -71,11 +70,11 @@ type ProjectSpikeProtectionParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The project of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/project/v1alpha1.Project
@@ -84,11 +83,11 @@ type ProjectSpikeProtectionParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
 }
 
 // ProjectSpikeProtectionSpec defines the desired state of ProjectSpikeProtection
@@ -110,8 +109,8 @@ type ProjectSpikeProtectionSpec struct {
 
 // ProjectSpikeProtectionStatus defines the observed state of ProjectSpikeProtection.
 type ProjectSpikeProtectionStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        ProjectSpikeProtectionObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               ProjectSpikeProtectionObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

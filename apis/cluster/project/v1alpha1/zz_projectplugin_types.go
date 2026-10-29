@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type ProjectPluginInitParameters struct {
@@ -25,11 +25,11 @@ type ProjectPluginInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Plugin ID.
 	Plugin *string `json:"plugin,omitempty" tf:"plugin,omitempty"`
@@ -40,11 +40,11 @@ type ProjectPluginInitParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.Reference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.Selector `json:"projectSelector,omitempty" tf:"-"`
 }
 
 type ProjectPluginObservation struct {
@@ -79,11 +79,11 @@ type ProjectPluginParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Plugin ID.
 	// +kubebuilder:validation:Optional
@@ -96,17 +96,17 @@ type ProjectPluginParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.Reference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.Selector `json:"projectSelector,omitempty" tf:"-"`
 }
 
 // ProjectPluginSpec defines the desired state of ProjectPlugin
 type ProjectPluginSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     ProjectPluginParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   ProjectPluginParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -122,8 +122,8 @@ type ProjectPluginSpec struct {
 
 // ProjectPluginStatus defines the observed state of ProjectPlugin.
 type ProjectPluginStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        ProjectPluginObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               ProjectPluginObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

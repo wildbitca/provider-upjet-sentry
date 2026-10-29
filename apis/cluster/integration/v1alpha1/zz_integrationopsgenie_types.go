@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type IntegrationOpsgenieInitParameters struct {
@@ -19,7 +19,7 @@ type IntegrationOpsgenieInitParameters struct {
 	IntegrationID *string `json:"integrationId,omitempty" tf:"integration_id,omitempty"`
 
 	// The integration key of the Opsgenie service.
-	IntegrationKeySecretRef v1.SecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
+	IntegrationKeySecretRef v2.SecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
 
 	// <i style="color:red;font-weight: bold">(ForceNew)</i> The organization of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
@@ -27,11 +27,11 @@ type IntegrationOpsgenieInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The name of the Opsgenie team. In Sentry, this is called Label.
 	Team *string `json:"team,omitempty" tf:"team,omitempty"`
@@ -58,7 +58,7 @@ type IntegrationOpsgenieParameters struct {
 
 	// The integration key of the Opsgenie service.
 	// +kubebuilder:validation:Optional
-	IntegrationKeySecretRef v1.SecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
+	IntegrationKeySecretRef v2.SecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
 
 	// <i style="color:red;font-weight: bold">(ForceNew)</i> The organization of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
@@ -67,11 +67,11 @@ type IntegrationOpsgenieParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The name of the Opsgenie team. In Sentry, this is called Label.
 	// +kubebuilder:validation:Optional
@@ -80,8 +80,8 @@ type IntegrationOpsgenieParameters struct {
 
 // IntegrationOpsgenieSpec defines the desired state of IntegrationOpsgenie
 type IntegrationOpsgenieSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     IntegrationOpsgenieParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   IntegrationOpsgenieParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -97,8 +97,8 @@ type IntegrationOpsgenieSpec struct {
 
 // IntegrationOpsgenieStatus defines the observed state of IntegrationOpsgenie.
 type IntegrationOpsgenieStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        IntegrationOpsgenieObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               IntegrationOpsgenieObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

@@ -10,8 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type OrganizationCodeMappingInitParameters struct {
@@ -28,11 +27,11 @@ type OrganizationCodeMappingInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Sentry Project ID.
 	ProjectID *string `json:"projectId,omitempty" tf:"project_id,omitempty"`
@@ -93,11 +92,11 @@ type OrganizationCodeMappingParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Sentry Project ID.
 	// +kubebuilder:validation:Optional
@@ -135,8 +134,8 @@ type OrganizationCodeMappingSpec struct {
 
 // OrganizationCodeMappingStatus defines the observed state of OrganizationCodeMapping.
 type OrganizationCodeMappingStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        OrganizationCodeMappingObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               OrganizationCodeMappingObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type OrganizationRepositoryInitParameters struct {
@@ -30,11 +30,11 @@ type OrganizationRepositoryInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 }
 
 type OrganizationRepositoryObservation struct {
@@ -74,17 +74,17 @@ type OrganizationRepositoryParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 }
 
 // OrganizationRepositorySpec defines the desired state of OrganizationRepository
 type OrganizationRepositorySpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     OrganizationRepositoryParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   OrganizationRepositoryParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -100,8 +100,8 @@ type OrganizationRepositorySpec struct {
 
 // OrganizationRepositoryStatus defines the observed state of OrganizationRepository.
 type OrganizationRepositoryStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        OrganizationRepositoryObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               OrganizationRepositoryObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

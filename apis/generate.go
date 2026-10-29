@@ -28,6 +28,6 @@
 package apis
 
 import (
-	_ "github.com/crossplane/crossplane-tools/cmd/angryjet"     //nolint:typecheck
-	_ "sigs.k8s.io/controller-tools/cmd/controller-gen"         //nolint:typecheck
+	_ "github.com/crossplane/crossplane-tools/cmd/angryjet" //nolint:typecheck
+	_ "sigs.k8s.io/controller-tools/cmd/controller-gen"     //nolint:typecheck
 )

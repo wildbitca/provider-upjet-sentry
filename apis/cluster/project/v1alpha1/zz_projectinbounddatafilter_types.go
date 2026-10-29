@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type ProjectInboundDataFilterInitParameters struct {
@@ -27,11 +27,11 @@ type ProjectInboundDataFilterInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The project of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/project/v1alpha1.Project
@@ -39,11 +39,11 @@ type ProjectInboundDataFilterInitParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.Reference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.Selector `json:"projectSelector,omitempty" tf:"-"`
 
 	// Specifies which legacy browser filters should be active. Anything excluded from the list will be disabled. See the [Sentry documentation](https://docs.sentry.io/api/projects/update-an-inbound-data-filter/) for a list of available subfilters.
 	// +listType=set
@@ -88,11 +88,11 @@ type ProjectInboundDataFilterParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The project of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/project/v1alpha1.Project
@@ -101,11 +101,11 @@ type ProjectInboundDataFilterParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.Reference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.Selector `json:"projectSelector,omitempty" tf:"-"`
 
 	// Specifies which legacy browser filters should be active. Anything excluded from the list will be disabled. See the [Sentry documentation](https://docs.sentry.io/api/projects/update-an-inbound-data-filter/) for a list of available subfilters.
 	// +kubebuilder:validation:Optional
@@ -115,8 +115,8 @@ type ProjectInboundDataFilterParameters struct {
 
 // ProjectInboundDataFilterSpec defines the desired state of ProjectInboundDataFilter
 type ProjectInboundDataFilterSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     ProjectInboundDataFilterParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   ProjectInboundDataFilterParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -132,8 +132,8 @@ type ProjectInboundDataFilterSpec struct {
 
 // ProjectInboundDataFilterStatus defines the observed state of ProjectInboundDataFilter.
 type ProjectInboundDataFilterStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        ProjectInboundDataFilterObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               ProjectInboundDataFilterObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

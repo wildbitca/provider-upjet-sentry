@@ -10,8 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type IntegrationPagerdutyInitParameters struct {
@@ -20,7 +19,7 @@ type IntegrationPagerdutyInitParameters struct {
 	IntegrationID *string `json:"integrationId,omitempty" tf:"integration_id,omitempty"`
 
 	// The integration key of the PagerDuty service.
-	IntegrationKeySecretRef v1.LocalSecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
+	IntegrationKeySecretRef v2.LocalSecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
 
 	// <i style="color:red;font-weight: bold">(ForceNew)</i> The organization of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/organization/v1alpha1.Organization
@@ -28,11 +27,11 @@ type IntegrationPagerdutyInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The name of the PagerDuty service.
 	Service *string `json:"service,omitempty" tf:"service,omitempty"`
@@ -59,7 +58,7 @@ type IntegrationPagerdutyParameters struct {
 
 	// The integration key of the PagerDuty service.
 	// +kubebuilder:validation:Optional
-	IntegrationKeySecretRef v1.LocalSecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
+	IntegrationKeySecretRef v2.LocalSecretKeySelector `json:"integrationKeySecretRef" tf:"-"`
 
 	// <i style="color:red;font-weight: bold">(ForceNew)</i> The organization of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/organization/v1alpha1.Organization
@@ -68,11 +67,11 @@ type IntegrationPagerdutyParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The name of the PagerDuty service.
 	// +kubebuilder:validation:Optional
@@ -98,8 +97,8 @@ type IntegrationPagerdutySpec struct {
 
 // IntegrationPagerdutyStatus defines the observed state of IntegrationPagerduty.
 type IntegrationPagerdutyStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        IntegrationPagerdutyObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               IntegrationPagerdutyObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

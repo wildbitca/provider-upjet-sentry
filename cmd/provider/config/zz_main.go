@@ -219,6 +219,13 @@ func main() {
 		kingpin.FatalIfError(controllerNamespaced.Setup_config(mgr, namespacedOpts), "Cannot setup namespaced UpjetSentry controllers")
 	}
 
+	// Conversion webhooks are registered by the generated aggregators (upjet
+	// v2.3.0+). They are only served when the webhook server has TLS material.
+	if *certsDir != "" {
+		kingpin.FatalIfError(controllerCluster.SetupWebhookWithManager_config(mgr), "Cannot setup cluster-scoped UpjetSentry webhooks")
+		kingpin.FatalIfError(controllerNamespaced.SetupWebhookWithManager_config(mgr), "Cannot setup namespaced UpjetSentry webhooks")
+	}
+
 	kingpin.FatalIfError(mgr.Start(ctrl.SetupSignalHandler()), "Cannot start controller manager")
 }
 

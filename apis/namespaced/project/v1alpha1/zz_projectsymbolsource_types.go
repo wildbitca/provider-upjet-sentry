@@ -10,8 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	v2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type LayoutInitParameters struct {
@@ -52,7 +51,7 @@ type ProjectSymbolSourceInitParameters struct {
 	AppConnectIssuer *string `json:"appConnectIssuer,omitempty" tf:"app_connect_issuer,omitempty"`
 
 	// The App Store Connect API Private Key. Required for AppStoreConnect sources, invalid for all others.
-	AppConnectPrivateKeySecretRef *v1.LocalSecretKeySelector `json:"appConnectPrivateKeySecretRef,omitempty" tf:"-"`
+	AppConnectPrivateKeySecretRef *v2.LocalSecretKeySelector `json:"appConnectPrivateKeySecretRef,omitempty" tf:"-"`
 
 	// The App Store Connect App ID. Required for AppStoreConnect sources, invalid for all others.
 	AppID *string `json:"appId,omitempty" tf:"app_id,omitempty"`
@@ -74,20 +73,20 @@ type ProjectSymbolSourceInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The password for accessing the source. Optional for HTTP sources, invalid for all others.
-	PasswordSecretRef *v1.LocalSecretKeySelector `json:"passwordSecretRef,omitempty" tf:"-"`
+	PasswordSecretRef *v2.LocalSecretKeySelector `json:"passwordSecretRef,omitempty" tf:"-"`
 
 	// The GCS or S3 prefix. Optional for GCS and S3 sourcse, invalid for HTTP and AppStoreConnect sources.
 	Prefix *string `json:"prefix,omitempty" tf:"prefix,omitempty"`
 
 	// The GCS private key. Required for GCS sources, invalid for all others.
-	PrivateKeySecretRef *v1.LocalSecretKeySelector `json:"privateKeySecretRef,omitempty" tf:"-"`
+	PrivateKeySecretRef *v2.LocalSecretKeySelector `json:"privateKeySecretRef,omitempty" tf:"-"`
 
 	// The project of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/project/v1alpha1.Project
@@ -95,17 +94,17 @@ type ProjectSymbolSourceInitParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
 
 	// The source's S3 region. Required for S3 sources, invalid for all others.
 	Region *string `json:"region,omitempty" tf:"region,omitempty"`
 
 	// The AWS Secret Access Key.Required for S3 sources, invalid for all others.
-	SecretKeySecretRef *v1.LocalSecretKeySelector `json:"secretKeySecretRef,omitempty" tf:"-"`
+	SecretKeySecretRef *v2.LocalSecretKeySelector `json:"secretKeySecretRef,omitempty" tf:"-"`
 
 	// The type of symbol source. One of `appStoreConnect` (App Store Connect), `http` (SymbolServer (HTTP)), `gcs` (Google Cloud Storage), `s3` (Amazon S3).
 	Type *string `json:"type,omitempty" tf:"type,omitempty"`
@@ -175,7 +174,7 @@ type ProjectSymbolSourceParameters struct {
 
 	// The App Store Connect API Private Key. Required for AppStoreConnect sources, invalid for all others.
 	// +kubebuilder:validation:Optional
-	AppConnectPrivateKeySecretRef *v1.LocalSecretKeySelector `json:"appConnectPrivateKeySecretRef,omitempty" tf:"-"`
+	AppConnectPrivateKeySecretRef *v2.LocalSecretKeySelector `json:"appConnectPrivateKeySecretRef,omitempty" tf:"-"`
 
 	// The App Store Connect App ID. Required for AppStoreConnect sources, invalid for all others.
 	// +kubebuilder:validation:Optional
@@ -203,15 +202,15 @@ type ProjectSymbolSourceParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The password for accessing the source. Optional for HTTP sources, invalid for all others.
 	// +kubebuilder:validation:Optional
-	PasswordSecretRef *v1.LocalSecretKeySelector `json:"passwordSecretRef,omitempty" tf:"-"`
+	PasswordSecretRef *v2.LocalSecretKeySelector `json:"passwordSecretRef,omitempty" tf:"-"`
 
 	// The GCS or S3 prefix. Optional for GCS and S3 sourcse, invalid for HTTP and AppStoreConnect sources.
 	// +kubebuilder:validation:Optional
@@ -219,7 +218,7 @@ type ProjectSymbolSourceParameters struct {
 
 	// The GCS private key. Required for GCS sources, invalid for all others.
 	// +kubebuilder:validation:Optional
-	PrivateKeySecretRef *v1.LocalSecretKeySelector `json:"privateKeySecretRef,omitempty" tf:"-"`
+	PrivateKeySecretRef *v2.LocalSecretKeySelector `json:"privateKeySecretRef,omitempty" tf:"-"`
 
 	// The project of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/project/v1alpha1.Project
@@ -228,11 +227,11 @@ type ProjectSymbolSourceParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.NamespacedReference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
 
 	// The source's S3 region. Required for S3 sources, invalid for all others.
 	// +kubebuilder:validation:Optional
@@ -240,7 +239,7 @@ type ProjectSymbolSourceParameters struct {
 
 	// The AWS Secret Access Key.Required for S3 sources, invalid for all others.
 	// +kubebuilder:validation:Optional
-	SecretKeySecretRef *v1.LocalSecretKeySelector `json:"secretKeySecretRef,omitempty" tf:"-"`
+	SecretKeySecretRef *v2.LocalSecretKeySelector `json:"secretKeySecretRef,omitempty" tf:"-"`
 
 	// The type of symbol source. One of `appStoreConnect` (App Store Connect), `http` (SymbolServer (HTTP)), `gcs` (Google Cloud Storage), `s3` (Amazon S3).
 	// +kubebuilder:validation:Optional
@@ -274,8 +273,8 @@ type ProjectSymbolSourceSpec struct {
 
 // ProjectSymbolSourceStatus defines the observed state of ProjectSymbolSource.
 type ProjectSymbolSourceStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        ProjectSymbolSourceObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               ProjectSymbolSourceObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

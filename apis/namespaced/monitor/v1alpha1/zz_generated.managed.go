@@ -6,124 +6,124 @@
 
 package v1alpha1
 
-import xpv1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+import xpv2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 
 // GetCondition of this CronMonitor.
-func (mg *CronMonitor) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (mg *CronMonitor) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
 // GetManagementPolicies of this CronMonitor.
-func (mg *CronMonitor) GetManagementPolicies() xpv1.ManagementPolicies {
+func (mg *CronMonitor) GetManagementPolicies() xpv2.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
 // GetProviderConfigReference of this CronMonitor.
-func (mg *CronMonitor) GetProviderConfigReference() *xpv1.ProviderConfigReference {
+func (mg *CronMonitor) GetProviderConfigReference() *xpv2.ProviderConfigReference {
 	return mg.Spec.ProviderConfigReference
 }
 
 // GetWriteConnectionSecretToReference of this CronMonitor.
-func (mg *CronMonitor) GetWriteConnectionSecretToReference() *xpv1.LocalSecretReference {
+func (mg *CronMonitor) GetWriteConnectionSecretToReference() *xpv2.LocalSecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
 // SetConditions of this CronMonitor.
-func (mg *CronMonitor) SetConditions(c ...xpv1.Condition) {
+func (mg *CronMonitor) SetConditions(c ...xpv2.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
 // SetManagementPolicies of this CronMonitor.
-func (mg *CronMonitor) SetManagementPolicies(r xpv1.ManagementPolicies) {
+func (mg *CronMonitor) SetManagementPolicies(r xpv2.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
 // SetProviderConfigReference of this CronMonitor.
-func (mg *CronMonitor) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
+func (mg *CronMonitor) SetProviderConfigReference(r *xpv2.ProviderConfigReference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
 // SetWriteConnectionSecretToReference of this CronMonitor.
-func (mg *CronMonitor) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
+func (mg *CronMonitor) SetWriteConnectionSecretToReference(r *xpv2.LocalSecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
 // GetCondition of this MetricMonitor.
-func (mg *MetricMonitor) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (mg *MetricMonitor) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
 // GetManagementPolicies of this MetricMonitor.
-func (mg *MetricMonitor) GetManagementPolicies() xpv1.ManagementPolicies {
+func (mg *MetricMonitor) GetManagementPolicies() xpv2.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
 // GetProviderConfigReference of this MetricMonitor.
-func (mg *MetricMonitor) GetProviderConfigReference() *xpv1.ProviderConfigReference {
+func (mg *MetricMonitor) GetProviderConfigReference() *xpv2.ProviderConfigReference {
 	return mg.Spec.ProviderConfigReference
 }
 
 // GetWriteConnectionSecretToReference of this MetricMonitor.
-func (mg *MetricMonitor) GetWriteConnectionSecretToReference() *xpv1.LocalSecretReference {
+func (mg *MetricMonitor) GetWriteConnectionSecretToReference() *xpv2.LocalSecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
 // SetConditions of this MetricMonitor.
-func (mg *MetricMonitor) SetConditions(c ...xpv1.Condition) {
+func (mg *MetricMonitor) SetConditions(c ...xpv2.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
 // SetManagementPolicies of this MetricMonitor.
-func (mg *MetricMonitor) SetManagementPolicies(r xpv1.ManagementPolicies) {
+func (mg *MetricMonitor) SetManagementPolicies(r xpv2.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
 // SetProviderConfigReference of this MetricMonitor.
-func (mg *MetricMonitor) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
+func (mg *MetricMonitor) SetProviderConfigReference(r *xpv2.ProviderConfigReference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
 // SetWriteConnectionSecretToReference of this MetricMonitor.
-func (mg *MetricMonitor) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
+func (mg *MetricMonitor) SetWriteConnectionSecretToReference(r *xpv2.LocalSecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
 // GetCondition of this UptimeMonitor.
-func (mg *UptimeMonitor) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (mg *UptimeMonitor) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
 // GetManagementPolicies of this UptimeMonitor.
-func (mg *UptimeMonitor) GetManagementPolicies() xpv1.ManagementPolicies {
+func (mg *UptimeMonitor) GetManagementPolicies() xpv2.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
 // GetProviderConfigReference of this UptimeMonitor.
-func (mg *UptimeMonitor) GetProviderConfigReference() *xpv1.ProviderConfigReference {
+func (mg *UptimeMonitor) GetProviderConfigReference() *xpv2.ProviderConfigReference {
 	return mg.Spec.ProviderConfigReference
 }
 
 // GetWriteConnectionSecretToReference of this UptimeMonitor.
-func (mg *UptimeMonitor) GetWriteConnectionSecretToReference() *xpv1.LocalSecretReference {
+func (mg *UptimeMonitor) GetWriteConnectionSecretToReference() *xpv2.LocalSecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
 // SetConditions of this UptimeMonitor.
-func (mg *UptimeMonitor) SetConditions(c ...xpv1.Condition) {
+func (mg *UptimeMonitor) SetConditions(c ...xpv2.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
 // SetManagementPolicies of this UptimeMonitor.
-func (mg *UptimeMonitor) SetManagementPolicies(r xpv1.ManagementPolicies) {
+func (mg *UptimeMonitor) SetManagementPolicies(r xpv2.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
 // SetProviderConfigReference of this UptimeMonitor.
-func (mg *UptimeMonitor) SetProviderConfigReference(r *xpv1.ProviderConfigReference) {
+func (mg *UptimeMonitor) SetProviderConfigReference(r *xpv2.ProviderConfigReference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
 // SetWriteConnectionSecretToReference of this UptimeMonitor.
-func (mg *UptimeMonitor) SetWriteConnectionSecretToReference(r *xpv1.LocalSecretReference) {
+func (mg *UptimeMonitor) SetWriteConnectionSecretToReference(r *xpv2.LocalSecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }

@@ -43,3 +43,17 @@ func SetupGated_monitor(mgr ctrl.Manager, o controller.Options) error {
 	}
 	return nil
 }
+
+// SetupWebhookWithManager_monitor registers conversion webhooks for all resource kinds in the group.
+func SetupWebhookWithManager_monitor(mgr ctrl.Manager) error {
+	for _, setup := range []func(ctrl.Manager) error{
+		cronmonitor.SetupWebhookWithManager,
+		metricmonitor.SetupWebhookWithManager,
+		uptimemonitor.SetupWebhookWithManager,
+	} {
+		if err := setup(mgr); err != nil {
+			return err
+		}
+	}
+	return nil
+}

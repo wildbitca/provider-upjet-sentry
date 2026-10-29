@@ -109,3 +109,39 @@ func SetupGated_monolith(mgr ctrl.Manager, o controller.Options) error {
 	}
 	return nil
 }
+
+// SetupWebhookWithManager_monolith registers conversion webhooks for all resource kinds in the group.
+func SetupWebhookWithManager_monolith(mgr ctrl.Manager) error {
+	for _, setup := range []func(ctrl.Manager) error{
+		alert.SetupWebhookWithManager,
+		issuealert.SetupWebhookWithManager,
+		metricalert.SetupWebhookWithManager,
+		notificationaction.SetupWebhookWithManager,
+		dashboard.SetupWebhookWithManager,
+		integrationopsgenie.SetupWebhookWithManager,
+		integrationpagerduty.SetupWebhookWithManager,
+		cronmonitor.SetupWebhookWithManager,
+		metricmonitor.SetupWebhookWithManager,
+		uptimemonitor.SetupWebhookWithManager,
+		organization.SetupWebhookWithManager,
+		organizationcodemapping.SetupWebhookWithManager,
+		organizationmember.SetupWebhookWithManager,
+		organizationrepository.SetupWebhookWithManager,
+		allprojectsspikeprotection.SetupWebhookWithManager,
+		project.SetupWebhookWithManager,
+		projectinbounddatafilter.SetupWebhookWithManager,
+		projectkey.SetupWebhookWithManager,
+		projectownership.SetupWebhookWithManager,
+		projectplugin.SetupWebhookWithManager,
+		projectspikeprotection.SetupWebhookWithManager,
+		projectsymbolsource.SetupWebhookWithManager,
+		providerconfig.SetupWebhookWithManager,
+		team.SetupWebhookWithManager,
+		teammember.SetupWebhookWithManager,
+	} {
+		if err := setup(mgr); err != nil {
+			return err
+		}
+	}
+	return nil
+}
