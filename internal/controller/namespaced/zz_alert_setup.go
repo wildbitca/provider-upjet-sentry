@@ -46,3 +46,18 @@ func SetupGated_alert(mgr ctrl.Manager, o controller.Options) error {
 	}
 	return nil
 }
+
+// SetupWebhookWithManager_alert registers conversion webhooks for all resource kinds in the group.
+func SetupWebhookWithManager_alert(mgr ctrl.Manager) error {
+	for _, setup := range []func(ctrl.Manager) error{
+		alert.SetupWebhookWithManager,
+		issuealert.SetupWebhookWithManager,
+		metricalert.SetupWebhookWithManager,
+		notificationaction.SetupWebhookWithManager,
+	} {
+		if err := setup(mgr); err != nil {
+			return err
+		}
+	}
+	return nil
+}

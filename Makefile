@@ -4,7 +4,7 @@
 PROJECT_NAME ?= provider-upjet-sentry
 PROJECT_REPO ?= github.com/wildbitca/$(PROJECT_NAME)
 
-export OPENTOFU_VERSION ?= 1.11.5
+export OPENTOFU_VERSION ?= 1.13.2
 
 export TERRAFORM_PROVIDER_SOURCE ?= jianyuan/sentry
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/jianyuan/terraform-provider-sentry
@@ -16,8 +16,8 @@ export TERRAFORM_DOCS_PATH ?= docs/resources
 
 # Pinned SHA-256 of the artifacts baked into the images. Update them together with the
 # versions above, from the SHA256SUMS published next to each release.
-export OPENTOFU_SHA256_AMD64 ?= 901121681e751574d739de5208cad059eddf9bd739b575745cf9e3c961b28a13
-export OPENTOFU_SHA256_ARM64 ?= 1b79f8fe3cbf7ac0540507bb6bd0ecab1675c78393bbf492867eaabb79840eec
+export OPENTOFU_SHA256_AMD64 ?= 723bebb0df8411daff1e5fc3862e28ff5581fe5634087f4c29a9aa41d78208b5
+export OPENTOFU_SHA256_ARM64 ?= 6e815c58a09ee957de606ff48cefad082942e70afc43b737ff975654c54ec453
 export TERRAFORM_PROVIDER_SHA256_AMD64 ?= 89cee74af02cbb524ff7cb56d9bd4db9e54d478dcb2fce930e775a23ef8a1e8a
 export TERRAFORM_PROVIDER_SHA256_ARM64 ?= 922e241c5da47ef5f7c00e440f39f138b85d48ad776bbb63871dc5b988e8055a
 export TERRAFORM_PROVIDER_LICENSE_SHA256 ?= 17e17df3775e2907abfc0e66cd0e9af02a01fca6accd96dbaf4928615f075d5a
@@ -359,10 +359,5 @@ help-special: crossplane.help
 .PHONY: crossplane.help help-special
 
 # TODO(negz): Update CI to use these targets.
-vendor: modules.download vendor.patch
+vendor: modules.download
 vendor.check: modules.check
-
-# Apply patches to vendored dependencies after go mod vendor.
-# These patches fix upstream issues that haven't been merged yet.
-vendor.patch:
-	@[ -x patches/apply.sh ] && patches/apply.sh || true

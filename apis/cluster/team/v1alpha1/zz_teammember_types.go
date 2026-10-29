@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type TeamMemberInitParameters struct {
@@ -21,11 +21,11 @@ type TeamMemberInitParameters struct {
 
 	// Reference to a OrganizationMember in organization to populate memberId.
 	// +kubebuilder:validation:Optional
-	MemberIDRef *v1.Reference `json:"memberIdRef,omitempty" tf:"-"`
+	MemberIDRef *v2.Reference `json:"memberIdRef,omitempty" tf:"-"`
 
 	// Selector for a OrganizationMember in organization to populate memberId.
 	// +kubebuilder:validation:Optional
-	MemberIDSelector *v1.Selector `json:"memberIdSelector,omitempty" tf:"-"`
+	MemberIDSelector *v2.Selector `json:"memberIdSelector,omitempty" tf:"-"`
 
 	// The organization of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
@@ -33,11 +33,11 @@ type TeamMemberInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The role of the member in the team. When not set, resolve to the minimum team role given by this member's organization role.
 	Role *string `json:"role,omitempty" tf:"role,omitempty"`
@@ -48,11 +48,11 @@ type TeamMemberInitParameters struct {
 
 	// Reference to a Team in team to populate team.
 	// +kubebuilder:validation:Optional
-	TeamRef *v1.Reference `json:"teamRef,omitempty" tf:"-"`
+	TeamRef *v2.Reference `json:"teamRef,omitempty" tf:"-"`
 
 	// Selector for a Team in team to populate team.
 	// +kubebuilder:validation:Optional
-	TeamSelector *v1.Selector `json:"teamSelector,omitempty" tf:"-"`
+	TeamSelector *v2.Selector `json:"teamSelector,omitempty" tf:"-"`
 }
 
 type TeamMemberObservation struct {
@@ -84,11 +84,11 @@ type TeamMemberParameters struct {
 
 	// Reference to a OrganizationMember in organization to populate memberId.
 	// +kubebuilder:validation:Optional
-	MemberIDRef *v1.Reference `json:"memberIdRef,omitempty" tf:"-"`
+	MemberIDRef *v2.Reference `json:"memberIdRef,omitempty" tf:"-"`
 
 	// Selector for a OrganizationMember in organization to populate memberId.
 	// +kubebuilder:validation:Optional
-	MemberIDSelector *v1.Selector `json:"memberIdSelector,omitempty" tf:"-"`
+	MemberIDSelector *v2.Selector `json:"memberIdSelector,omitempty" tf:"-"`
 
 	// The organization of this resource.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
@@ -97,11 +97,11 @@ type TeamMemberParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The role of the member in the team. When not set, resolve to the minimum team role given by this member's organization role.
 	// +kubebuilder:validation:Optional
@@ -114,17 +114,17 @@ type TeamMemberParameters struct {
 
 	// Reference to a Team in team to populate team.
 	// +kubebuilder:validation:Optional
-	TeamRef *v1.Reference `json:"teamRef,omitempty" tf:"-"`
+	TeamRef *v2.Reference `json:"teamRef,omitempty" tf:"-"`
 
 	// Selector for a Team in team to populate team.
 	// +kubebuilder:validation:Optional
-	TeamSelector *v1.Selector `json:"teamSelector,omitempty" tf:"-"`
+	TeamSelector *v2.Selector `json:"teamSelector,omitempty" tf:"-"`
 }
 
 // TeamMemberSpec defines the desired state of TeamMember
 type TeamMemberSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     TeamMemberParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   TeamMemberParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -140,8 +140,8 @@ type TeamMemberSpec struct {
 
 // TeamMemberStatus defines the observed state of TeamMember.
 type TeamMemberStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        TeamMemberObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               TeamMemberObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

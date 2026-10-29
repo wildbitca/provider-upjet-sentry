@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type CronMonitorInitParameters struct {
@@ -39,11 +39,11 @@ type CronMonitorInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	Owner *OwnerInitParameters `json:"owner,omitempty" tf:"owner,omitempty"`
 
@@ -53,11 +53,11 @@ type CronMonitorInitParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.Reference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.Selector `json:"projectSelector,omitempty" tf:"-"`
 
 	// Recovery Tolerance. Resolve the issue when this many consecutive healthy check-ins are processed. Either `crontab` or `interval_value` and `interval_unit` must be provided.
 	RecoveryThreshold *float64 `json:"recoveryThreshold,omitempty" tf:"recovery_threshold,omitempty"`
@@ -140,11 +140,11 @@ type CronMonitorParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// +kubebuilder:validation:Optional
 	Owner *OwnerParameters `json:"owner,omitempty" tf:"owner,omitempty"`
@@ -156,11 +156,11 @@ type CronMonitorParameters struct {
 
 	// Reference to a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectRef *v1.Reference `json:"projectRef,omitempty" tf:"-"`
+	ProjectRef *v2.Reference `json:"projectRef,omitempty" tf:"-"`
 
 	// Selector for a Project in project to populate project.
 	// +kubebuilder:validation:Optional
-	ProjectSelector *v1.Selector `json:"projectSelector,omitempty" tf:"-"`
+	ProjectSelector *v2.Selector `json:"projectSelector,omitempty" tf:"-"`
 
 	// Recovery Tolerance. Resolve the issue when this many consecutive healthy check-ins are processed. Either `crontab` or `interval_value` and `interval_unit` must be provided.
 	// +kubebuilder:validation:Optional
@@ -183,11 +183,11 @@ type OwnerInitParameters struct {
 
 	// Reference to a Team in team to populate teamId.
 	// +kubebuilder:validation:Optional
-	TeamIDRef *v1.Reference `json:"teamIdRef,omitempty" tf:"-"`
+	TeamIDRef *v2.Reference `json:"teamIdRef,omitempty" tf:"-"`
 
 	// Selector for a Team in team to populate teamId.
 	// +kubebuilder:validation:Optional
-	TeamIDSelector *v1.Selector `json:"teamIdSelector,omitempty" tf:"-"`
+	TeamIDSelector *v2.Selector `json:"teamIdSelector,omitempty" tf:"-"`
 
 	// The user ID to assign new issues to. Conflicts with `team_id`.
 	UserID *string `json:"userId,omitempty" tf:"user_id,omitempty"`
@@ -212,11 +212,11 @@ type OwnerParameters struct {
 
 	// Reference to a Team in team to populate teamId.
 	// +kubebuilder:validation:Optional
-	TeamIDRef *v1.Reference `json:"teamIdRef,omitempty" tf:"-"`
+	TeamIDRef *v2.Reference `json:"teamIdRef,omitempty" tf:"-"`
 
 	// Selector for a Team in team to populate teamId.
 	// +kubebuilder:validation:Optional
-	TeamIDSelector *v1.Selector `json:"teamIdSelector,omitempty" tf:"-"`
+	TeamIDSelector *v2.Selector `json:"teamIdSelector,omitempty" tf:"-"`
 
 	// The user ID to assign new issues to. Conflicts with `team_id`.
 	// +kubebuilder:validation:Optional
@@ -264,8 +264,8 @@ type ScheduleParameters struct {
 
 // CronMonitorSpec defines the desired state of CronMonitor
 type CronMonitorSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     CronMonitorParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   CronMonitorParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -281,8 +281,8 @@ type CronMonitorSpec struct {
 
 // CronMonitorStatus defines the observed state of CronMonitor.
 type CronMonitorStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        CronMonitorObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               CronMonitorObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

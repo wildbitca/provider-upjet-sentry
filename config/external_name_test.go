@@ -136,6 +136,38 @@ func TestGetIDFn(t *testing.T) {
 	}
 }
 
+func TestGetImportIDFn(t *testing.T) {
+	ctx := context.Background()
+	cases := map[string]struct {
+		resource string
+		en       string
+		params   map[string]any
+		want     string
+	}{
+		"TeamIsOrgSlashSlug":     {"sentry_team", "backend", map[string]any{"organization": "acme"}, "acme/backend"},
+		"ProjectIsOrgSlashSlug":  {"sentry_project", "web", map[string]any{"organization": "acme"}, "acme/web"},
+		"KeyIsOrgProjectID":      {"sentry_key", "abc", map[string]any{"organization": "acme", "project": "web"}, "acme/web/abc"},
+		"OpsgenieHasIntegration": {"sentry_integration_opsgenie", "svc", map[string]any{"organization": "acme", "integration_id": "5"}, "acme/5/svc"},
+		"RepositoryHasFourParts": {"sentry_organization_repository", "88", map[string]any{"organization": "acme", "integration_type": "github", "integration_id": "12"}, "acme/github/12/88"},
+		"PluginIsOrgProjectName": {"sentry_plugin", "slack", map[string]any{"organization": "acme", "project": "web", "plugin": "slack"}, "acme/web/slack"},
+		"NoExternalNameYet":      {"sentry_alert", "", map[string]any{"organization": "acme"}, ""},
+	}
+	for name, tc := range cases {
+		t.Run(name, func(t *testing.T) {
+			got, err := ExternalNameConfigs[tc.resource].GetImportIDFn(ctx, tc.en, tc.params, nil)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if got != tc.want {
+				t.Fatalf("GetImportIDFn = %q, want %q", got, tc.want)
+			}
+		})
+	}
+	if _, err := ExternalNameConfigs["sentry_issue_alert"].GetImportIDFn(ctx, "55", map[string]any{"organization": "acme"}, nil); err == nil || !strings.Contains(err.Error(), "project") {
+		t.Fatalf("want an error naming the missing project, got %v", err)
+	}
+}
+
 func TestGetExternalNameFn(t *testing.T) {
 	cases := map[string]struct {
 		resource string

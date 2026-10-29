@@ -12,7 +12,7 @@ Nothing has run against a live Sentry:
 - `jsontypes` attribute diffs;
 - how often the `production` environment protection fires per run.
 
-Run one create/observe cycle per external-name class (bare, composite, parameter-driven, id-less) before tagging `v0.1.0`.
+Run one create/observe cycle per external-name class (bare, composite, parameter-driven, id-less) after `v1.0.0` (first live validation).
 
 ## Repository settings still to configure
 

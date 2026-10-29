@@ -66,28 +66,56 @@ func joinStrings(m map[string]any, keys []string, what string) (string, error) {
 	return strings.Join(parts, "/"), nil
 }
 
+// withImportID sets GetImportIDFn on e. The Terraform import string is
+// "<parameters...>/<external name>", with the parameters read in the order of
+// keys, while the state id (GetIDFn) is left untouched.
+//
+// Upjet 2.4.0+ passes GetImportIDFn, not GetIDFn, to `terraform import` (the
+// Observe-only and adoption path). The jianyuan/sentry importers of the
+// resources below require a composite string even though the id they store in
+// state is bare, so importing with the bare id fails ("expected format
+// org/id"). An empty external name yields an empty import id, which upjet
+// reads as "the resource does not exist yet" and routes to Create.
+func withImportID(e config.ExternalName, keys ...string) config.ExternalName {
+	e.GetImportIDFn = func(_ context.Context, externalName string, parameters, _ map[string]any) (string, error) {
+		if externalName == "" {
+			return "", nil
+		}
+		parts := make([]string, 0, len(keys)+1)
+		for _, k := range keys {
+			v, ok := parameters[k].(string)
+			if !ok || v == "" {
+				return "", fmt.Errorf("cannot build the import id: %q is required in parameters", k)
+			}
+			parts = append(parts, v)
+		}
+		return strings.Join(append(parts, externalName), "/"), nil
+	}
+	return e
+}
+
 // ExternalNameConfigs contains all external name configurations for this
 // provider and doubles as the include list. jianyuan/sentry v0.15.8 has 24
 // managed resources; see docs/architecture/external-names.md for the classes.
 var ExternalNameConfigs = map[string]config.ExternalName{
 	// Slug addressed.
 	"sentry_organization": slugAsIdentifier,
-	"sentry_team":         slugAsIdentifier,
-	"sentry_project":      slugAsIdentifier,
+	"sentry_team":         withImportID(slugAsIdentifier, "organization"),
+	"sentry_project":      withImportID(slugAsIdentifier, "organization"),
 
 	// Provider assigned id, stored bare in state.
-	"sentry_organization_code_mapping": config.IdentifierFromProvider,
-	"sentry_organization_repository":   config.IdentifierFromProvider,
-	"sentry_key":                       config.IdentifierFromProvider,
-	"sentry_project_symbol_source":     config.IdentifierFromProvider,
-	"sentry_issue_alert":               config.IdentifierFromProvider,
-	"sentry_alert":                     config.IdentifierFromProvider,
-	"sentry_notification_action":       config.IdentifierFromProvider,
-	"sentry_cron_monitor":              config.IdentifierFromProvider,
-	"sentry_metric_monitor":            config.IdentifierFromProvider,
-	"sentry_uptime_monitor":            config.IdentifierFromProvider,
-	"sentry_integration_opsgenie":      config.IdentifierFromProvider,
-	"sentry_integration_pagerduty":     config.IdentifierFromProvider,
+	"sentry_organization_code_mapping": withImportID(config.IdentifierFromProvider, "organization"),
+	"sentry_organization_repository":   withImportID(config.IdentifierFromProvider, "organization", "integration_type", "integration_id"),
+	"sentry_key":                       withImportID(config.IdentifierFromProvider, "organization", "project"),
+	"sentry_project_symbol_source":     withImportID(config.IdentifierFromProvider, "organization", "project"),
+	"sentry_issue_alert":               withImportID(config.IdentifierFromProvider, "organization", "project"),
+	"sentry_alert":                     withImportID(config.IdentifierFromProvider, "organization"),
+	"sentry_notification_action":       withImportID(config.IdentifierFromProvider, "organization"),
+	"sentry_cron_monitor":              withImportID(config.IdentifierFromProvider, "organization"),
+	"sentry_metric_monitor":            withImportID(config.IdentifierFromProvider, "organization"),
+	"sentry_uptime_monitor":            withImportID(config.IdentifierFromProvider, "organization"),
+	"sentry_integration_opsgenie":      withImportID(config.IdentifierFromProvider, "organization", "integration_id"),
+	"sentry_integration_pagerduty":     withImportID(config.IdentifierFromProvider, "organization", "integration_id"),
 
 	// Provider assigned id, stored as a composite in state.
 	"sentry_organization_member": compositeFromProvider("{{ .parameters.organization }}/{{ .external_name }}"),
@@ -96,7 +124,7 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 
 	// Identity made only of parameters. A plugin's id is its name, which is the
 	// required `plugin` parameter.
-	"sentry_plugin": paramDrivenID([]string{"plugin"}, []string{"plugin"}),
+	"sentry_plugin": withImportID(paramDrivenID([]string{"plugin"}, []string{"plugin"}), "organization", "project"),
 	"sentry_team_member": paramDrivenID(
 		[]string{"organization", "team", "member_id"}, []string{"member_id"}),
 	"sentry_project_inbound_data_filter": paramDrivenID(

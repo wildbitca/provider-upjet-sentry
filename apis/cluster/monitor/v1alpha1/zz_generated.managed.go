@@ -6,154 +6,154 @@
 
 package v1alpha1
 
-import xpv1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+import xpv2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 
 // GetCondition of this CronMonitor.
-func (mg *CronMonitor) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (mg *CronMonitor) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
 // GetDeletionPolicy of this CronMonitor.
-func (mg *CronMonitor) GetDeletionPolicy() xpv1.DeletionPolicy {
+func (mg *CronMonitor) GetDeletionPolicy() xpv2.DeletionPolicy {
 	return mg.Spec.DeletionPolicy
 }
 
 // GetManagementPolicies of this CronMonitor.
-func (mg *CronMonitor) GetManagementPolicies() xpv1.ManagementPolicies {
+func (mg *CronMonitor) GetManagementPolicies() xpv2.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
 // GetProviderConfigReference of this CronMonitor.
-func (mg *CronMonitor) GetProviderConfigReference() *xpv1.Reference {
+func (mg *CronMonitor) GetProviderConfigReference() *xpv2.Reference {
 	return mg.Spec.ProviderConfigReference
 }
 
 // GetWriteConnectionSecretToReference of this CronMonitor.
-func (mg *CronMonitor) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
+func (mg *CronMonitor) GetWriteConnectionSecretToReference() *xpv2.SecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
 // SetConditions of this CronMonitor.
-func (mg *CronMonitor) SetConditions(c ...xpv1.Condition) {
+func (mg *CronMonitor) SetConditions(c ...xpv2.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
 // SetDeletionPolicy of this CronMonitor.
-func (mg *CronMonitor) SetDeletionPolicy(r xpv1.DeletionPolicy) {
+func (mg *CronMonitor) SetDeletionPolicy(r xpv2.DeletionPolicy) {
 	mg.Spec.DeletionPolicy = r
 }
 
 // SetManagementPolicies of this CronMonitor.
-func (mg *CronMonitor) SetManagementPolicies(r xpv1.ManagementPolicies) {
+func (mg *CronMonitor) SetManagementPolicies(r xpv2.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
 // SetProviderConfigReference of this CronMonitor.
-func (mg *CronMonitor) SetProviderConfigReference(r *xpv1.Reference) {
+func (mg *CronMonitor) SetProviderConfigReference(r *xpv2.Reference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
 // SetWriteConnectionSecretToReference of this CronMonitor.
-func (mg *CronMonitor) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
+func (mg *CronMonitor) SetWriteConnectionSecretToReference(r *xpv2.SecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
 // GetCondition of this MetricMonitor.
-func (mg *MetricMonitor) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (mg *MetricMonitor) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
 // GetDeletionPolicy of this MetricMonitor.
-func (mg *MetricMonitor) GetDeletionPolicy() xpv1.DeletionPolicy {
+func (mg *MetricMonitor) GetDeletionPolicy() xpv2.DeletionPolicy {
 	return mg.Spec.DeletionPolicy
 }
 
 // GetManagementPolicies of this MetricMonitor.
-func (mg *MetricMonitor) GetManagementPolicies() xpv1.ManagementPolicies {
+func (mg *MetricMonitor) GetManagementPolicies() xpv2.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
 // GetProviderConfigReference of this MetricMonitor.
-func (mg *MetricMonitor) GetProviderConfigReference() *xpv1.Reference {
+func (mg *MetricMonitor) GetProviderConfigReference() *xpv2.Reference {
 	return mg.Spec.ProviderConfigReference
 }
 
 // GetWriteConnectionSecretToReference of this MetricMonitor.
-func (mg *MetricMonitor) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
+func (mg *MetricMonitor) GetWriteConnectionSecretToReference() *xpv2.SecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
 // SetConditions of this MetricMonitor.
-func (mg *MetricMonitor) SetConditions(c ...xpv1.Condition) {
+func (mg *MetricMonitor) SetConditions(c ...xpv2.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
 // SetDeletionPolicy of this MetricMonitor.
-func (mg *MetricMonitor) SetDeletionPolicy(r xpv1.DeletionPolicy) {
+func (mg *MetricMonitor) SetDeletionPolicy(r xpv2.DeletionPolicy) {
 	mg.Spec.DeletionPolicy = r
 }
 
 // SetManagementPolicies of this MetricMonitor.
-func (mg *MetricMonitor) SetManagementPolicies(r xpv1.ManagementPolicies) {
+func (mg *MetricMonitor) SetManagementPolicies(r xpv2.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
 // SetProviderConfigReference of this MetricMonitor.
-func (mg *MetricMonitor) SetProviderConfigReference(r *xpv1.Reference) {
+func (mg *MetricMonitor) SetProviderConfigReference(r *xpv2.Reference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
 // SetWriteConnectionSecretToReference of this MetricMonitor.
-func (mg *MetricMonitor) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
+func (mg *MetricMonitor) SetWriteConnectionSecretToReference(r *xpv2.SecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }
 
 // GetCondition of this UptimeMonitor.
-func (mg *UptimeMonitor) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (mg *UptimeMonitor) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return mg.Status.GetCondition(ct)
 }
 
 // GetDeletionPolicy of this UptimeMonitor.
-func (mg *UptimeMonitor) GetDeletionPolicy() xpv1.DeletionPolicy {
+func (mg *UptimeMonitor) GetDeletionPolicy() xpv2.DeletionPolicy {
 	return mg.Spec.DeletionPolicy
 }
 
 // GetManagementPolicies of this UptimeMonitor.
-func (mg *UptimeMonitor) GetManagementPolicies() xpv1.ManagementPolicies {
+func (mg *UptimeMonitor) GetManagementPolicies() xpv2.ManagementPolicies {
 	return mg.Spec.ManagementPolicies
 }
 
 // GetProviderConfigReference of this UptimeMonitor.
-func (mg *UptimeMonitor) GetProviderConfigReference() *xpv1.Reference {
+func (mg *UptimeMonitor) GetProviderConfigReference() *xpv2.Reference {
 	return mg.Spec.ProviderConfigReference
 }
 
 // GetWriteConnectionSecretToReference of this UptimeMonitor.
-func (mg *UptimeMonitor) GetWriteConnectionSecretToReference() *xpv1.SecretReference {
+func (mg *UptimeMonitor) GetWriteConnectionSecretToReference() *xpv2.SecretReference {
 	return mg.Spec.WriteConnectionSecretToReference
 }
 
 // SetConditions of this UptimeMonitor.
-func (mg *UptimeMonitor) SetConditions(c ...xpv1.Condition) {
+func (mg *UptimeMonitor) SetConditions(c ...xpv2.Condition) {
 	mg.Status.SetConditions(c...)
 }
 
 // SetDeletionPolicy of this UptimeMonitor.
-func (mg *UptimeMonitor) SetDeletionPolicy(r xpv1.DeletionPolicy) {
+func (mg *UptimeMonitor) SetDeletionPolicy(r xpv2.DeletionPolicy) {
 	mg.Spec.DeletionPolicy = r
 }
 
 // SetManagementPolicies of this UptimeMonitor.
-func (mg *UptimeMonitor) SetManagementPolicies(r xpv1.ManagementPolicies) {
+func (mg *UptimeMonitor) SetManagementPolicies(r xpv2.ManagementPolicies) {
 	mg.Spec.ManagementPolicies = r
 }
 
 // SetProviderConfigReference of this UptimeMonitor.
-func (mg *UptimeMonitor) SetProviderConfigReference(r *xpv1.Reference) {
+func (mg *UptimeMonitor) SetProviderConfigReference(r *xpv2.Reference) {
 	mg.Spec.ProviderConfigReference = r
 }
 
 // SetWriteConnectionSecretToReference of this UptimeMonitor.
-func (mg *UptimeMonitor) SetWriteConnectionSecretToReference(r *xpv1.SecretReference) {
+func (mg *UptimeMonitor) SetWriteConnectionSecretToReference(r *xpv2.SecretReference) {
 	mg.Spec.WriteConnectionSecretToReference = r
 }

@@ -7,18 +7,17 @@ package v1beta1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	xpv1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
-	xpv2 "github.com/crossplane/crossplane-runtime/v2/apis/common/v2"
 	"github.com/crossplane/crossplane-runtime/v2/pkg/resource"
+	xpv2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 // A ProviderCredentials defines credentials for a provider.
 type ProviderCredentials struct {
 	// Source of the provider credentials.
 	// +kubebuilder:validation:Enum=None;Secret;InjectedIdentity;Environment;Filesystem
-	Source xpv1.CredentialsSource `json:"source"`
+	Source xpv2.CredentialsSource `json:"source"`
 
-	xpv1.CommonCredentialSelectors `json:",inline"`
+	xpv2.CommonCredentialSelectors `json:",inline"`
 }
 
 // A ProviderConfigSpec defines the desired state of a ProviderConfig.
@@ -29,7 +28,7 @@ type ProviderConfigSpec struct {
 
 // A ProviderConfigStatus defines the observed status of a ProviderConfig.
 type ProviderConfigStatus struct {
-	xpv1.ProviderConfigStatus `json:",inline"`
+	xpv2.ProviderConfigStatus `json:",inline"`
 }
 
 // +kubebuilder:object:root=true
@@ -48,12 +47,12 @@ type ProviderConfig struct {
 }
 
 // GetCondition of this ProviderConfig.
-func (p *ProviderConfig) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (p *ProviderConfig) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return p.Status.GetCondition(ct)
 }
 
 // SetConditions of this ProviderConfig.
-func (p *ProviderConfig) SetConditions(c ...xpv1.Condition) {
+func (p *ProviderConfig) SetConditions(c ...xpv2.Condition) {
 	p.Status.SetConditions(c...)
 }
 
@@ -93,12 +92,12 @@ type ClusterProviderConfig struct {
 }
 
 // GetCondition of this ClusterProviderConfig.
-func (p *ClusterProviderConfig) GetCondition(ct xpv1.ConditionType) xpv1.Condition {
+func (p *ClusterProviderConfig) GetCondition(ct xpv2.ConditionType) xpv2.Condition {
 	return p.Status.GetCondition(ct)
 }
 
 // SetConditions of this ClusterProviderConfig.
-func (p *ClusterProviderConfig) SetConditions(c ...xpv1.Condition) {
+func (p *ClusterProviderConfig) SetConditions(c ...xpv2.Condition) {
 	p.Status.SetConditions(c...)
 }
 
@@ -137,22 +136,22 @@ type ProviderConfigUsage struct {
 }
 
 // GetProviderConfigReference of this ProviderConfigUsage.
-func (p *ProviderConfigUsage) GetProviderConfigReference() xpv1.ProviderConfigReference {
+func (p *ProviderConfigUsage) GetProviderConfigReference() xpv2.ProviderConfigReference {
 	return p.ProviderConfigReference
 }
 
 // SetProviderConfigReference of this ProviderConfigUsage.
-func (p *ProviderConfigUsage) SetProviderConfigReference(r xpv1.ProviderConfigReference) {
+func (p *ProviderConfigUsage) SetProviderConfigReference(r xpv2.ProviderConfigReference) {
 	p.ProviderConfigReference = r
 }
 
 // GetResourceReference of this ProviderConfigUsage.
-func (p *ProviderConfigUsage) GetResourceReference() xpv1.TypedReference {
+func (p *ProviderConfigUsage) GetResourceReference() xpv2.TypedReference {
 	return p.ResourceReference
 }
 
 // SetResourceReference of this ProviderConfigUsage.
-func (p *ProviderConfigUsage) SetResourceReference(r xpv1.TypedReference) {
+func (p *ProviderConfigUsage) SetResourceReference(r xpv2.TypedReference) {
 	p.ResourceReference = r
 }
 

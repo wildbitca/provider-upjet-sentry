@@ -66,7 +66,7 @@ New tests and guards:
 
 - `internal/clients/setup_test.go`: `TerraformSetupBuilder` with a fake client for cluster-scoped, namespaced and cluster-wide ProviderConfigs; missing ProviderConfig, missing reference, unknown kind, missing secret or key, empty, malformed and non-object JSON, missing token, invalid `base_url`. Every error case asserts that the credential canary is not echoed.
 - `internal/clients/upjet-sentry_test.go`: `base_url` with userinfo, host-less, dot segments, query, fragment and a valid port plus path prefix. They failed before the stricter validation was written.
-- `config/singleton_test.go`: the two id-less singletons keep an id-less Terraform schema and their CRD shape, the upjet build in use skips a synthetic state with an empty id, and `patches/apply.sh` patches and is idempotent (mutating the script makes the test fail).
+- `config/singleton_test.go`: the two id-less singletons keep an id-less Terraform schema and their CRD shape, the upjet build in use gates the synthetic state id on `hasTFID` (id-less schemas get no id). The fork-only empty-id guard and `patches/apply.sh` were removed in the upstream upgrade.
 - `scripts/check-workflows.sh`: a job that reads `UPBOUND_TOKEN` or `WILDBIT_CI_APP_KEY` outside `environment: production` fails (checked against the pre-change workflow), and the checksum pins in the Makefile and `publish.yml` must match.
 - The host OpenTofu download is verified against the pinned SHA-256; a wrong value aborts the install.
 
@@ -102,3 +102,7 @@ Verified on the `c54bfbe` team image as uid 65532: both LICENSE files are readab
 - Server-side CRD admission and CEL cost (no cluster in scope); CRDs were validated structurally and by example only.
 - `make local-deploy` (kind) and the CI workflows themselves (never executed; actionlint and the guardrail scripts only).
 - Multi-arch images (only linux/amd64 is published; the arm64 checksums are pinned but the arm64 image was not built).
+
+## Upgrade run (upjet v2.5.1, OpenTofu 1.13.2)
+
+Host Go 1.27.3 driven with `GOTOOLCHAIN=go1.26.8`. `make generate` (OpenTofu 1.13.2 schema dump), `make vendor vendor.check`, `make lint` (golangci-lint v2.11.4, 0 issues), `make -j2 test` and `scripts/check-{groups,workflows,residue}.sh` all pass. New tests: `TestGetImportIDFn`, `TestImportIDRoundTrip`. The only CRD delta is the additive `status.lastHandledReconcileAt` on all 48 CRDs. Live validation against a Sentry server was not run.

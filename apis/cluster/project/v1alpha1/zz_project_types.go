@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type ClientSecurityInitParameters struct {
@@ -26,7 +26,7 @@ type ClientSecurityInitParameters struct {
 	SecurityTokenHeader *string `json:"securityTokenHeader,omitempty" tf:"security_token_header,omitempty"`
 
 	// Security Token. Outbound requests matching Allowed Domains will have the header "{security_token_header}: {security_token}" appended.
-	SecurityTokenSecretRef *v1.SecretKeySelector `json:"securityTokenSecretRef,omitempty" tf:"-"`
+	SecurityTokenSecretRef *v2.SecretKeySelector `json:"securityTokenSecretRef,omitempty" tf:"-"`
 
 	// Verify TLS/SSL. Outbound requests will verify TLS (sometimes known as SSL) connections.
 	VerifyTLSSSL *bool `json:"verifyTlsSsl,omitempty" tf:"verify_tls_ssl,omitempty"`
@@ -65,7 +65,7 @@ type ClientSecurityParameters struct {
 
 	// Security Token. Outbound requests matching Allowed Domains will have the header "{security_token_header}: {security_token}" appended.
 	// +kubebuilder:validation:Optional
-	SecurityTokenSecretRef *v1.SecretKeySelector `json:"securityTokenSecretRef,omitempty" tf:"-"`
+	SecurityTokenSecretRef *v2.SecretKeySelector `json:"securityTokenSecretRef,omitempty" tf:"-"`
 
 	// Verify TLS/SSL. Outbound requests will verify TLS (sometimes known as SSL) connections.
 	// +kubebuilder:validation:Optional
@@ -156,11 +156,11 @@ type ProjectInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
 	Platform *string `json:"platform,omitempty" tf:"platform,omitempty"`
@@ -175,11 +175,11 @@ type ProjectInitParameters struct {
 
 	// References to Team in team to populate teams.
 	// +kubebuilder:validation:Optional
-	TeamsRefs []v1.Reference `json:"teamsRefs,omitempty" tf:"-"`
+	TeamsRefs []v2.Reference `json:"teamsRefs,omitempty" tf:"-"`
 
 	// Selector for a list of Team in team to populate teams.
 	// +kubebuilder:validation:Optional
-	TeamsSelector *v1.Selector `json:"teamsSelector,omitempty" tf:"-"`
+	TeamsSelector *v2.Selector `json:"teamsSelector,omitempty" tf:"-"`
 }
 
 type ProjectObservation struct {
@@ -282,11 +282,11 @@ type ProjectParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
 	// +kubebuilder:validation:Optional
@@ -304,17 +304,17 @@ type ProjectParameters struct {
 
 	// References to Team in team to populate teams.
 	// +kubebuilder:validation:Optional
-	TeamsRefs []v1.Reference `json:"teamsRefs,omitempty" tf:"-"`
+	TeamsRefs []v2.Reference `json:"teamsRefs,omitempty" tf:"-"`
 
 	// Selector for a list of Team in team to populate teams.
 	// +kubebuilder:validation:Optional
-	TeamsSelector *v1.Selector `json:"teamsSelector,omitempty" tf:"-"`
+	TeamsSelector *v2.Selector `json:"teamsSelector,omitempty" tf:"-"`
 }
 
 // ProjectSpec defines the desired state of Project
 type ProjectSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     ProjectParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   ProjectParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -330,8 +330,8 @@ type ProjectSpec struct {
 
 // ProjectStatus defines the observed state of Project.
 type ProjectStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        ProjectObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               ProjectObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true

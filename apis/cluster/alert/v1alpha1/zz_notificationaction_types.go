@@ -10,7 +10,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	v1 "github.com/crossplane/crossplane-runtime/v2/apis/common/v1"
+	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
 type NotificationActionInitParameters struct {
@@ -24,11 +24,11 @@ type NotificationActionInitParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The list of project slugs that the Notification Action is created for.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/project/v1alpha1.Project
@@ -36,11 +36,11 @@ type NotificationActionInitParameters struct {
 
 	// References to Project in project to populate projects.
 	// +kubebuilder:validation:Optional
-	ProjectsRefs []v1.Reference `json:"projectsRefs,omitempty" tf:"-"`
+	ProjectsRefs []v2.Reference `json:"projectsRefs,omitempty" tf:"-"`
 
 	// Selector for a list of Project in project to populate projects.
 	// +kubebuilder:validation:Optional
-	ProjectsSelector *v1.Selector `json:"projectsSelector,omitempty" tf:"-"`
+	ProjectsSelector *v2.Selector `json:"projectsSelector,omitempty" tf:"-"`
 
 	// The service that is used for sending the notification.
 	ServiceType *string `json:"serviceType,omitempty" tf:"service_type,omitempty"`
@@ -93,11 +93,11 @@ type NotificationActionParameters struct {
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v1.Reference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v1.Selector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// The list of project slugs that the Notification Action is created for.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/project/v1alpha1.Project
@@ -106,11 +106,11 @@ type NotificationActionParameters struct {
 
 	// References to Project in project to populate projects.
 	// +kubebuilder:validation:Optional
-	ProjectsRefs []v1.Reference `json:"projectsRefs,omitempty" tf:"-"`
+	ProjectsRefs []v2.Reference `json:"projectsRefs,omitempty" tf:"-"`
 
 	// Selector for a list of Project in project to populate projects.
 	// +kubebuilder:validation:Optional
-	ProjectsSelector *v1.Selector `json:"projectsSelector,omitempty" tf:"-"`
+	ProjectsSelector *v2.Selector `json:"projectsSelector,omitempty" tf:"-"`
 
 	// The service that is used for sending the notification.
 	// +kubebuilder:validation:Optional
@@ -131,8 +131,8 @@ type NotificationActionParameters struct {
 
 // NotificationActionSpec defines the desired state of NotificationAction
 type NotificationActionSpec struct {
-	v1.ResourceSpec `json:",inline"`
-	ForProvider     NotificationActionParameters `json:"forProvider"`
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   NotificationActionParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -148,8 +148,8 @@ type NotificationActionSpec struct {
 
 // NotificationActionStatus defines the observed state of NotificationAction.
 type NotificationActionStatus struct {
-	v1.ResourceStatus `json:",inline"`
-	AtProvider        NotificationActionObservation `json:"atProvider,omitempty"`
+	v2.ManagedResourceStatus `json:",inline"`
+	AtProvider               NotificationActionObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
