@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Upjet is now upstream `github.com/crossplane/upjet/v2` v2.5.1; the `wildbitca/upjet` fork `replace` is gone. `crossplane-runtime/v2` v2.4.0, new direct dependency `github.com/crossplane/crossplane/apis/v2` v2.4.1 (ProviderConfig API types moved to `apis/v2/core/v2`), Go 1.26.8, controller-gen v0.20, controller-runtime v0.25, client-go v0.37, terraform-plugin-sdk v2.40.1, terraform-plugin-framework v1.19.0, grpc v1.85.0.
+- OpenTofu 1.11.5 -> 1.13.2 (Makefile, publish workflow, docs). `jianyuan/sentry` stays at v0.15.8, the latest release.
+- The provider mains now register the generated conversion webhooks (`SetupWebhookWithManager_<group>`) when a certificate directory is configured.
+- CRDs gain the additive `status.lastHandledReconcileAt` field.
+
+### Fixed
+
+- Observe-only and adoption imports no longer fail for resources whose Terraform importer needs a composite id while the state id is bare (`Team`, `Project`, `ProjectKey`, `IssueAlert`, `Alert`, `CronMonitor`, `MetricMonitor`, `UptimeMonitor`, `NotificationAction`, `OrganizationCodeMapping`, `OrganizationRepository`, `ProjectSymbolSource`, `IntegrationOpsgenie`, `IntegrationPagerduty`, `ProjectPlugin`). `ExternalName.GetImportIDFn` builds the composite string; `GetIDFn` stays bare.
+
+### Removed
+
+- The fork-only patches: numeric state ids, the CEL rule for required dynamic parameters, the dynamic envelope unwrap (none is exercised by this schema) and the empty-id guard (`patches/apply.sh`, `make vendor.patch`). See `docs/architecture/spikes.md` S6 for the open risk the guard leaves.
+
 ## [0.1.0] - unreleased
 
 First version. Wraps `jianyuan/sentry` v0.15.8 (OpenTofu 1.11.5) with the Upjet fork `wildbitca/upjet` v2.2.7. Not tagged or published yet.

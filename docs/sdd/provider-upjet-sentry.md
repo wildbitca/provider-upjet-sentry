@@ -60,7 +60,7 @@ See the README "Known issues" list and `docs/architecture/spikes.md`. Everything
 ## 6. Decisions
 
 - CLI (OpenTofu) mode only, `IncludeList` only. `internal/` Framework packages cannot be imported (see `overview.md`).
-- Upjet fork `github.com/wildbitca/upjet/v2` v2.2.7 (CEL/dynamic fix from v2.2.3, empty-id guard).
+- Upstream `github.com/crossplane/upjet/v2` v2.5.1 (no fork; the fork-only CEL/dynamic fixes are not needed by this schema, and the empty-id guard is an open risk, see `docs/architecture/spikes.md` S6), `crossplane-runtime/v2` v2.4.0, `crossplane/apis/v2` v2.4.1, OpenTofu 1.13.2.
 - Bare-id synthetic state for provider-assigned ids (spike S1).
 - Explicit Kind for every resource (Upjet's default drops the first word after the prefix).
 - `OrganizationCodeMapping.project_id` is not a reference (import cycle between groups).
