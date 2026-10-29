@@ -2,7 +2,7 @@
 # https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 #
 # Pair this file with a branch ruleset that enables "Require review from Code
-# Owners": the release pipeline, build inputs and vendored patches below must
+# Owners": the release pipeline and the build inputs below must
 # never merge without an admin review.
 
 # Default owner for everything.
@@ -15,7 +15,6 @@
 /Makefile               @wildbitca/admin
 /cluster/               @wildbitca/admin
 /scripts/               @wildbitca/admin
-/patches/               @wildbitca/admin
 /hack/                  @wildbitca/admin
 /build                  @wildbitca/admin
 /.gitmodules            @wildbitca/admin

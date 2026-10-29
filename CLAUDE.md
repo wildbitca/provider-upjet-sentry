@@ -22,5 +22,5 @@ Write durable documentation directly into the committed docs tree, never into a 
 
 ## Building
 
-See `README.md` (Development). Tooling: Go 1.26+, OpenTofu 1.11.5 (fetched by the Makefile), `goimports` on `PATH`, Docker for images.
+See `README.md` (Development). Tooling: Go 1.26+, OpenTofu 1.13.2 (fetched by the Makefile), `goimports` on `PATH`, Docker for images.
 - Image checksums: the SHA-256 values for OpenTofu, the provider zips and the upstream LICENSE live in `Makefile` and `.github/workflows/publish.yml`. Bump them together with `OPENTOFU_VERSION` / `TERRAFORM_PROVIDER_VERSION`.
