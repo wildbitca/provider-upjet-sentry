@@ -10,7 +10,7 @@ Tag `v2.5.1-wb.1` is upstream v2.5.1 with:
 
 - numeric state ids (Terraform ids that are numbers stay numbers in the synthetic state);
 - no CEL "required parameter" rule for required dynamic parameters;
-- empty external-name guard: no synthetic state is written when the external id is empty (`fp.hasTFID && tfID != ""`).
+- empty external-name guard: no synthetic state is written when the external id is empty (`EnsureTFState` returns early when `tfID == ""`).
 
 ## Why the pin is required here
 
