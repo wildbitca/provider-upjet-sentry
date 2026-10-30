@@ -135,6 +135,9 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	// No `id` attribute at all: identity is the import string.
 	"sentry_project_ownership": paramDrivenID(
 		[]string{"organization", "project"}, []string{"organization", "project"}),
+	// Note: sentry_all_projects_spike_protection has no Terraform resource importer
+	// ("Resource Import Not Implemented"), so Observe-only import cannot succeed.
+	// Retained here for parameter-driven external name configuration when managed with Create/Update.
 	"sentry_all_projects_spike_protection": paramDrivenID(
 		[]string{"organization"}, []string{"organization"}),
 }
