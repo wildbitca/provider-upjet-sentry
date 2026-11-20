@@ -19,6 +19,7 @@ import (
 	cronmonitor "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/monitor/cronmonitor"
 	metricmonitor "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/monitor/metricmonitor"
 	uptimemonitor "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/monitor/uptimemonitor"
+	datascrubbing "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/datascrubbing"
 	organization "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organization"
 	organizationcodemapping "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationcodemapping"
 	organizationmember "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationmember"
@@ -50,6 +51,7 @@ func Setup_monolith(mgr ctrl.Manager, o controller.Options) error {
 		cronmonitor.Setup,
 		metricmonitor.Setup,
 		uptimemonitor.Setup,
+		datascrubbing.Setup,
 		organization.Setup,
 		organizationcodemapping.Setup,
 		organizationmember.Setup,
@@ -87,6 +89,7 @@ func SetupGated_monolith(mgr ctrl.Manager, o controller.Options) error {
 		cronmonitor.SetupGated,
 		metricmonitor.SetupGated,
 		uptimemonitor.SetupGated,
+		datascrubbing.SetupGated,
 		organization.SetupGated,
 		organizationcodemapping.SetupGated,
 		organizationmember.SetupGated,
@@ -123,6 +126,7 @@ func SetupWebhookWithManager_monolith(mgr ctrl.Manager) error {
 		cronmonitor.SetupWebhookWithManager,
 		metricmonitor.SetupWebhookWithManager,
 		uptimemonitor.SetupWebhookWithManager,
+		datascrubbing.SetupWebhookWithManager,
 		organization.SetupWebhookWithManager,
 		organizationcodemapping.SetupWebhookWithManager,
 		organizationmember.SetupWebhookWithManager,

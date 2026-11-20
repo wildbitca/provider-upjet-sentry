@@ -248,11 +248,13 @@ spec:
                     type: object
                   rateLimitCount:
                     description: Number of events that can be reported within the
-                      rate limit window.
+                      rate limit window. Requires a Sentry plan that supports per-key
+                      rate limits.
                     type: number
                   rateLimitWindow:
                     description: Length of time in seconds that will be considered
-                      when checking the rate limit.
+                      when checking the rate limit. Requires a Sentry plan that supports
+                      per-key rate limits.
                     type: number
                 type: object
               initProvider:
@@ -458,11 +460,13 @@ spec:
                     type: object
                   rateLimitCount:
                     description: Number of events that can be reported within the
-                      rate limit window.
+                      rate limit window. Requires a Sentry plan that supports per-key
+                      rate limits.
                     type: number
                   rateLimitWindow:
                     description: Length of time in seconds that will be considered
-                      when checking the rate limit.
+                      when checking the rate limit. Requires a Sentry plan that supports
+                      per-key rate limits.
                     type: number
                 type: object
               managementPolicies:
@@ -569,11 +573,13 @@ spec:
                     type: string
                   rateLimitCount:
                     description: Number of events that can be reported within the
-                      rate limit window.
+                      rate limit window. Requires a Sentry plan that supports per-key
+                      rate limits.
                     type: number
                   rateLimitWindow:
                     description: Length of time in seconds that will be considered
-                      when checking the rate limit.
+                      when checking the rate limit. Requires a Sentry plan that supports
+                      per-key rate limits.
                     type: number
                 type: object
               conditions:

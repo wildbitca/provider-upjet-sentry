@@ -9,6 +9,7 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
+	datascrubbing "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/datascrubbing"
 	organization "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organization"
 	organizationcodemapping "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationcodemapping"
 	organizationmember "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationmember"
@@ -19,6 +20,7 @@ import (
 // the supplied manager.
 func Setup_organization(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
+		datascrubbing.Setup,
 		organization.Setup,
 		organizationcodemapping.Setup,
 		organizationmember.Setup,
@@ -35,6 +37,7 @@ func Setup_organization(mgr ctrl.Manager, o controller.Options) error {
 // the supplied manager gated.
 func SetupGated_organization(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
+		datascrubbing.SetupGated,
 		organization.SetupGated,
 		organizationcodemapping.SetupGated,
 		organizationmember.SetupGated,
@@ -50,6 +53,7 @@ func SetupGated_organization(mgr ctrl.Manager, o controller.Options) error {
 // SetupWebhookWithManager_organization registers conversion webhooks for all resource kinds in the group.
 func SetupWebhookWithManager_organization(mgr ctrl.Manager) error {
 	for _, setup := range []func(ctrl.Manager) error{
+		datascrubbing.SetupWebhookWithManager,
 		organization.SetupWebhookWithManager,
 		organizationcodemapping.SetupWebhookWithManager,
 		organizationmember.SetupWebhookWithManager,

@@ -315,13 +315,17 @@ spec:
                                 properties:
                                   channelId:
                                     description: The Slack channel ID to send the
-                                      notification to. This is an optional field that
-                                      can be used to avoid rate-limiting.
+                                      notification to. If `channel_name` is omitted,
+                                      Sentry resolves the channel name from this ID.
+                                      Set it to avoid rate-limiting and to keep the
+                                      alert valid when the channel is renamed.
                                     type: string
                                   channelName:
                                     description: 'The name of the Slack channel to
                                       send the notification to (e.g., #critical, Jane
-                                      Schmidt).'
+                                      Schmidt). If omitted, Sentry resolves the name
+                                      from `channel_id`. At least one of `channel_name`
+                                      or `channel_id` must be set.'
                                     type: string
                                   integrationId:
                                     description: The ID of the Slack integration.
@@ -442,8 +446,8 @@ spec:
                                 properties:
                                   comparisonInterval:
                                     description: 'The time period to compare against.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`,
+                                      and `30d`.'
                                     type: string
                                   filters:
                                     items:
@@ -593,8 +597,8 @@ spec:
                                     description: 'The time period in which to evaluate
                                       the value. e.g. Percentage of sessions affected
                                       by an issue is more than `value` in `interval`.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `1m`, `5m`, `10m`, `30m`,
+                                      and `1h`.'
                                     type: string
                                   value:
                                     description: A positive integer representing the
@@ -606,8 +610,8 @@ spec:
                                 properties:
                                   comparisonInterval:
                                     description: 'The time period to compare against.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`,
+                                      and `30d`.'
                                     type: string
                                   filters:
                                     items:
@@ -636,8 +640,7 @@ spec:
                                       the value. e.g. Percentage of sessions affected
                                       by an issue is `comparisonInterval` percent
                                       higher `value` compared to `interval`. Valid
-                                      values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`,
-                                      and `30d`.'
+                                      values are: `1m`, `5m`, `10m`, `30m`, and `1h`.'
                                     type: string
                                   value:
                                     description: A positive integer representing the
@@ -1120,13 +1123,17 @@ spec:
                                 properties:
                                   channelId:
                                     description: The Slack channel ID to send the
-                                      notification to. This is an optional field that
-                                      can be used to avoid rate-limiting.
+                                      notification to. If `channel_name` is omitted,
+                                      Sentry resolves the channel name from this ID.
+                                      Set it to avoid rate-limiting and to keep the
+                                      alert valid when the channel is renamed.
                                     type: string
                                   channelName:
                                     description: 'The name of the Slack channel to
                                       send the notification to (e.g., #critical, Jane
-                                      Schmidt).'
+                                      Schmidt). If omitted, Sentry resolves the name
+                                      from `channel_id`. At least one of `channel_name`
+                                      or `channel_id` must be set.'
                                     type: string
                                   integrationId:
                                     description: The ID of the Slack integration.
@@ -1247,8 +1254,8 @@ spec:
                                 properties:
                                   comparisonInterval:
                                     description: 'The time period to compare against.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`,
+                                      and `30d`.'
                                     type: string
                                   filters:
                                     items:
@@ -1398,8 +1405,8 @@ spec:
                                     description: 'The time period in which to evaluate
                                       the value. e.g. Percentage of sessions affected
                                       by an issue is more than `value` in `interval`.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `1m`, `5m`, `10m`, `30m`,
+                                      and `1h`.'
                                     type: string
                                   value:
                                     description: A positive integer representing the
@@ -1411,8 +1418,8 @@ spec:
                                 properties:
                                   comparisonInterval:
                                     description: 'The time period to compare against.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`,
+                                      and `30d`.'
                                     type: string
                                   filters:
                                     items:
@@ -1441,8 +1448,7 @@ spec:
                                       the value. e.g. Percentage of sessions affected
                                       by an issue is `comparisonInterval` percent
                                       higher `value` compared to `interval`. Valid
-                                      values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`,
-                                      and `30d`.'
+                                      values are: `1m`, `5m`, `10m`, `30m`, and `1h`.'
                                     type: string
                                   value:
                                     description: A positive integer representing the
@@ -2026,13 +2032,17 @@ spec:
                                 properties:
                                   channelId:
                                     description: The Slack channel ID to send the
-                                      notification to. This is an optional field that
-                                      can be used to avoid rate-limiting.
+                                      notification to. If `channel_name` is omitted,
+                                      Sentry resolves the channel name from this ID.
+                                      Set it to avoid rate-limiting and to keep the
+                                      alert valid when the channel is renamed.
                                     type: string
                                   channelName:
                                     description: 'The name of the Slack channel to
                                       send the notification to (e.g., #critical, Jane
-                                      Schmidt).'
+                                      Schmidt). If omitted, Sentry resolves the name
+                                      from `channel_id`. At least one of `channel_name`
+                                      or `channel_id` must be set.'
                                     type: string
                                   integrationId:
                                     description: The ID of the Slack integration.
@@ -2153,8 +2163,8 @@ spec:
                                 properties:
                                   comparisonInterval:
                                     description: 'The time period to compare against.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`,
+                                      and `30d`.'
                                     type: string
                                   filters:
                                     items:
@@ -2304,8 +2314,8 @@ spec:
                                     description: 'The time period in which to evaluate
                                       the value. e.g. Percentage of sessions affected
                                       by an issue is more than `value` in `interval`.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `1m`, `5m`, `10m`, `30m`,
+                                      and `1h`.'
                                     type: string
                                   value:
                                     description: A positive integer representing the
@@ -2317,8 +2327,8 @@ spec:
                                 properties:
                                   comparisonInterval:
                                     description: 'The time period to compare against.
-                                      Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`,
-                                      `1w`, and `30d`.'
+                                      Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`,
+                                      and `30d`.'
                                     type: string
                                   filters:
                                     items:
@@ -2347,8 +2357,7 @@ spec:
                                       the value. e.g. Percentage of sessions affected
                                       by an issue is `comparisonInterval` percent
                                       higher `value` compared to `interval`. Valid
-                                      values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`,
-                                      and `30d`.'
+                                      values are: `1m`, `5m`, `10m`, `30m`, and `1h`.'
                                     type: string
                                   value:
                                     description: A positive integer representing the

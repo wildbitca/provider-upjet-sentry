@@ -4,22 +4,22 @@
 PROJECT_NAME ?= provider-upjet-sentry
 PROJECT_REPO ?= github.com/wildbitca/$(PROJECT_NAME)
 
-export OPENTOFU_VERSION ?= 1.13.2
+export OPENTOFU_VERSION ?= 1.13.9
 
 export TERRAFORM_PROVIDER_SOURCE ?= jianyuan/sentry
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/jianyuan/terraform-provider-sentry
-export TERRAFORM_PROVIDER_VERSION ?= 0.15.8
+export TERRAFORM_PROVIDER_VERSION ?= 0.16.1
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-sentry
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/jianyuan/terraform-provider-sentry/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
-export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-sentry_v0.15.8
+export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-sentry_v0.16.1
 export TERRAFORM_DOCS_PATH ?= docs/resources
 
 # Pinned SHA-256 of the artifacts baked into the images. Update them together with the
 # versions above, from the SHA256SUMS published next to each release.
-export OPENTOFU_SHA256_AMD64 ?= 723bebb0df8411daff1e5fc3862e28ff5581fe5634087f4c29a9aa41d78208b5
-export OPENTOFU_SHA256_ARM64 ?= 6e815c58a09ee957de606ff48cefad082942e70afc43b737ff975654c54ec453
-export TERRAFORM_PROVIDER_SHA256_AMD64 ?= 89cee74af02cbb524ff7cb56d9bd4db9e54d478dcb2fce930e775a23ef8a1e8a
-export TERRAFORM_PROVIDER_SHA256_ARM64 ?= 922e241c5da47ef5f7c00e440f39f138b85d48ad776bbb63871dc5b988e8055a
+export OPENTOFU_SHA256_AMD64 ?= bc44eb6b06446ba83bd4072114891987f590f66cca712737a7f1147c50c539ce
+export OPENTOFU_SHA256_ARM64 ?= 04f7c93828b859d420269ed30f923ffebf09157b5d7fb95bf8d88a4d208b7fa3
+export TERRAFORM_PROVIDER_SHA256_AMD64 ?= 3f3bdba67ca0e3b3cc632b6c55239f905e80d5063ffd0db4636b70b8acd55f9a
+export TERRAFORM_PROVIDER_SHA256_ARM64 ?= 4badeb5770d770197b9eb849a367ebcc26d8da7fb497d4c26d2f92633bad9073
 export TERRAFORM_PROVIDER_LICENSE_SHA256 ?= 17e17df3775e2907abfc0e66cd0e9af02a01fca6accd96dbaf4928615f075d5a
 
 

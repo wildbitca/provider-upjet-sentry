@@ -123,6 +123,12 @@ type FiltersParameters struct {
 type ProjectInitParameters struct {
 	ClientSecurity *ClientSecurityInitParameters `json:"clientSecurity,omitempty" tf:"client_security,omitempty"`
 
+	// Enable server-side data scrubbing for this project. If the organization requires data scrubbing, it applies regardless of this setting.
+	DataScrubber *bool `json:"dataScrubber,omitempty" tf:"data_scrubber,omitempty"`
+
+	// Apply the default scrubbers to prevent things like passwords and credit cards from being stored. If the organization requires the default scrubbers, they apply regardless of this setting.
+	DataScrubberDefaults *bool `json:"dataScrubberDefaults,omitempty" tf:"data_scrubber_defaults,omitempty"`
+
 	// Whether to create a default key on project creation. By default, Sentry will create a key for you. If you wish to manage keys manually, set this to false and create keys using the `sentry_key` resource. Note that this only takes effect on project creation, not on project update.
 	DefaultKey *bool `json:"defaultKey,omitempty" tf:"default_key,omitempty"`
 
@@ -162,11 +168,28 @@ type ProjectInitParameters struct {
 	// +kubebuilder:validation:Optional
 	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
-	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
+	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `expo`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `node-pi-durable`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
 	Platform *string `json:"platform,omitempty" tf:"platform,omitempty"`
+
+	// Expand JSON-like string attributes on logs into nested attributes that can be searched. Only applies to logs received after this is enabled.
+	RelayAutomaticJSONExpansion *bool `json:"relayAutomaticJsonExpansion,omitempty" tf:"relay_automatic_json_expansion,omitempty"`
+
+	// Advanced data scrubbing rules, as a JSON string holding the `rules` and `applications` objects. Build it with `jsonencode()`. The value replaces all advanced data scrubbing rules. For details, see [Advanced Data Scrubbing](https://docs.sentry.io/security-legal-pii/scrubbing/advanced-datascrubbing/). To remove all rules, set it to `jsonencode({})`. The organization's rules also apply.
+	RelayPiiConfig *string `json:"relayPiiConfig,omitempty" tf:"relay_pii_config,omitempty"`
 
 	// Hours in which an issue is automatically resolve if not seen after this amount of time.
 	ResolveAge *float64 `json:"resolveAge,omitempty" tf:"resolve_age,omitempty"`
+
+	// Field names which data scrubbers should ignore. The organization's safe fields also apply.
+	// +listType=set
+	SafeFields []*string `json:"safeFields,omitempty" tf:"safe_fields,omitempty"`
+
+	// Prevent IP addresses from being stored for new events. If the organization requires IP address scrubbing, it applies regardless of this setting.
+	ScrubIPAddresses *bool `json:"scrubIpAddresses,omitempty" tf:"scrub_ip_addresses,omitempty"`
+
+	// Additional field names to match against when scrubbing data. The organization's sensitive fields also apply.
+	// +listType=set
+	SensitiveFields []*string `json:"sensitiveFields,omitempty" tf:"sensitive_fields,omitempty"`
 
 	// The slugs of the teams to create the project for.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/team/v1alpha1.Team
@@ -184,6 +207,12 @@ type ProjectInitParameters struct {
 
 type ProjectObservation struct {
 	ClientSecurity *ClientSecurityObservation `json:"clientSecurity,omitempty" tf:"client_security,omitempty"`
+
+	// Enable server-side data scrubbing for this project. If the organization requires data scrubbing, it applies regardless of this setting.
+	DataScrubber *bool `json:"dataScrubber,omitempty" tf:"data_scrubber,omitempty"`
+
+	// Apply the default scrubbers to prevent things like passwords and credit cards from being stored. If the organization requires the default scrubbers, they apply regardless of this setting.
+	DataScrubberDefaults *bool `json:"dataScrubberDefaults,omitempty" tf:"data_scrubber_defaults,omitempty"`
 
 	// Whether to create a default key on project creation. By default, Sentry will create a key for you. If you wish to manage keys manually, set this to false and create keys using the `sentry_key` resource. Note that this only takes effect on project creation, not on project update.
 	DefaultKey *bool `json:"defaultKey,omitempty" tf:"default_key,omitempty"`
@@ -223,11 +252,28 @@ type ProjectObservation struct {
 	// The organization of this resource.
 	Organization *string `json:"organization,omitempty" tf:"organization,omitempty"`
 
-	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
+	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `expo`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `node-pi-durable`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
 	Platform *string `json:"platform,omitempty" tf:"platform,omitempty"`
+
+	// Expand JSON-like string attributes on logs into nested attributes that can be searched. Only applies to logs received after this is enabled.
+	RelayAutomaticJSONExpansion *bool `json:"relayAutomaticJsonExpansion,omitempty" tf:"relay_automatic_json_expansion,omitempty"`
+
+	// Advanced data scrubbing rules, as a JSON string holding the `rules` and `applications` objects. Build it with `jsonencode()`. The value replaces all advanced data scrubbing rules. For details, see [Advanced Data Scrubbing](https://docs.sentry.io/security-legal-pii/scrubbing/advanced-datascrubbing/). To remove all rules, set it to `jsonencode({})`. The organization's rules also apply.
+	RelayPiiConfig *string `json:"relayPiiConfig,omitempty" tf:"relay_pii_config,omitempty"`
 
 	// Hours in which an issue is automatically resolve if not seen after this amount of time.
 	ResolveAge *float64 `json:"resolveAge,omitempty" tf:"resolve_age,omitempty"`
+
+	// Field names which data scrubbers should ignore. The organization's safe fields also apply.
+	// +listType=set
+	SafeFields []*string `json:"safeFields,omitempty" tf:"safe_fields,omitempty"`
+
+	// Prevent IP addresses from being stored for new events. If the organization requires IP address scrubbing, it applies regardless of this setting.
+	ScrubIPAddresses *bool `json:"scrubIpAddresses,omitempty" tf:"scrub_ip_addresses,omitempty"`
+
+	// Additional field names to match against when scrubbing data. The organization's sensitive fields also apply.
+	// +listType=set
+	SensitiveFields []*string `json:"sensitiveFields,omitempty" tf:"sensitive_fields,omitempty"`
 
 	// The slugs of the teams to create the project for.
 	// +listType=set
@@ -238,6 +284,14 @@ type ProjectParameters struct {
 
 	// +kubebuilder:validation:Optional
 	ClientSecurity *ClientSecurityParameters `json:"clientSecurity,omitempty" tf:"client_security,omitempty"`
+
+	// Enable server-side data scrubbing for this project. If the organization requires data scrubbing, it applies regardless of this setting.
+	// +kubebuilder:validation:Optional
+	DataScrubber *bool `json:"dataScrubber,omitempty" tf:"data_scrubber,omitempty"`
+
+	// Apply the default scrubbers to prevent things like passwords and credit cards from being stored. If the organization requires the default scrubbers, they apply regardless of this setting.
+	// +kubebuilder:validation:Optional
+	DataScrubberDefaults *bool `json:"dataScrubberDefaults,omitempty" tf:"data_scrubber_defaults,omitempty"`
 
 	// Whether to create a default key on project creation. By default, Sentry will create a key for you. If you wish to manage keys manually, set this to false and create keys using the `sentry_key` resource. Note that this only takes effect on project creation, not on project update.
 	// +kubebuilder:validation:Optional
@@ -288,13 +342,35 @@ type ProjectParameters struct {
 	// +kubebuilder:validation:Optional
 	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
-	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
+	// The platform for this project. Use `other` for platforms not listed. Valid values are: `other`, `android`, `apple`, `apple-ios`, `apple-macos`, `bun`, `capacitor`, `cordova`, `dart`, `deno`, `dotnet`, `dotnet-aspnet`, `dotnet-aspnetcore`, `dotnet-awslambda`, `dotnet-gcpfunctions`, `dotnet-maui`, `dotnet-uwp`, `dotnet-winforms`, `dotnet-wpf`, `dotnet-xamarin`, `electron`, `elixir`, `expo`, `flutter`, `go`, `go-echo`, `go-fasthttp`, `go-fiber`, `go-gin`, `go-http`, `go-iris`, `go-martini`, `go-negroni`, `godot`, `ionic`, `java`, `java-log4j2`, `java-logback`, `java-spring`, `java-spring-boot`, `javascript`, `javascript-angular`, `javascript-astro`, `javascript-ember`, `javascript-gatsby`, `javascript-nextjs`, `javascript-nuxt`, `javascript-react`, `javascript-react-router`, `javascript-remix`, `javascript-solid`, `javascript-solidstart`, `javascript-svelte`, `javascript-sveltekit`, `javascript-tanstackstart-react`, `javascript-vue`, `kotlin`, `minidump`, `native`, `native-qt`, `nintendo-switch`, `node`, `node-awslambda`, `node-azurefunctions`, `node-cloudflare-pages`, `node-cloudflare-workers`, `node-connect`, `node-eve`, `node-express`, `node-fastify`, `node-flue`, `node-gcpfunctions`, `node-hapi`, `node-hono`, `node-koa`, `node-mastra`, `node-nestjs`, `node-pi-durable`, `php`, `php-laravel`, `php-symfony`, `playstation`, `powershell`, `python`, `python-aiohttp`, `python-asgi`, `python-awslambda`, `python-bottle`, `python-celery`, `python-chalice`, `python-django`, `python-falcon`, `python-fastapi`, `python-flask`, `python-gcpfunctions`, `python-litestar`, `python-pylons`, `python-pymongo`, `python-pyramid`, `python-quart`, `python-rq`, `python-sanic`, `python-serverless`, `python-starlette`, `python-tornado`, `python-tryton`, `python-wsgi`, `react-native`, `ruby`, `ruby-rack`, `ruby-rails`, `rust`, `unity`, `unreal`, and `xbox`.
 	// +kubebuilder:validation:Optional
 	Platform *string `json:"platform,omitempty" tf:"platform,omitempty"`
+
+	// Expand JSON-like string attributes on logs into nested attributes that can be searched. Only applies to logs received after this is enabled.
+	// +kubebuilder:validation:Optional
+	RelayAutomaticJSONExpansion *bool `json:"relayAutomaticJsonExpansion,omitempty" tf:"relay_automatic_json_expansion,omitempty"`
+
+	// Advanced data scrubbing rules, as a JSON string holding the `rules` and `applications` objects. Build it with `jsonencode()`. The value replaces all advanced data scrubbing rules. For details, see [Advanced Data Scrubbing](https://docs.sentry.io/security-legal-pii/scrubbing/advanced-datascrubbing/). To remove all rules, set it to `jsonencode({})`. The organization's rules also apply.
+	// +kubebuilder:validation:Optional
+	RelayPiiConfig *string `json:"relayPiiConfig,omitempty" tf:"relay_pii_config,omitempty"`
 
 	// Hours in which an issue is automatically resolve if not seen after this amount of time.
 	// +kubebuilder:validation:Optional
 	ResolveAge *float64 `json:"resolveAge,omitempty" tf:"resolve_age,omitempty"`
+
+	// Field names which data scrubbers should ignore. The organization's safe fields also apply.
+	// +kubebuilder:validation:Optional
+	// +listType=set
+	SafeFields []*string `json:"safeFields,omitempty" tf:"safe_fields,omitempty"`
+
+	// Prevent IP addresses from being stored for new events. If the organization requires IP address scrubbing, it applies regardless of this setting.
+	// +kubebuilder:validation:Optional
+	ScrubIPAddresses *bool `json:"scrubIpAddresses,omitempty" tf:"scrub_ip_addresses,omitempty"`
+
+	// Additional field names to match against when scrubbing data. The organization's sensitive fields also apply.
+	// +kubebuilder:validation:Optional
+	// +listType=set
+	SensitiveFields []*string `json:"sensitiveFields,omitempty" tf:"sensitive_fields,omitempty"`
 
 	// The slugs of the teams to create the project for.
 	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/team/v1alpha1.Team

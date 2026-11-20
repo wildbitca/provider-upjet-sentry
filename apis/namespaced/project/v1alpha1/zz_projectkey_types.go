@@ -92,10 +92,10 @@ type ProjectKeyInitParameters struct {
 	// +kubebuilder:validation:Optional
 	ProjectSelector *v2.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
 
-	// Number of events that can be reported within the rate limit window.
+	// Number of events that can be reported within the rate limit window. Requires a Sentry plan that supports per-key rate limits.
 	RateLimitCount *float64 `json:"rateLimitCount,omitempty" tf:"rate_limit_count,omitempty"`
 
-	// Length of time in seconds that will be considered when checking the rate limit.
+	// Length of time in seconds that will be considered when checking the rate limit. Requires a Sentry plan that supports per-key rate limits.
 	RateLimitWindow *float64 `json:"rateLimitWindow,omitempty" tf:"rate_limit_window,omitempty"`
 }
 
@@ -119,10 +119,10 @@ type ProjectKeyObservation struct {
 	// The public key.
 	Public *string `json:"public,omitempty" tf:"public,omitempty"`
 
-	// Number of events that can be reported within the rate limit window.
+	// Number of events that can be reported within the rate limit window. Requires a Sentry plan that supports per-key rate limits.
 	RateLimitCount *float64 `json:"rateLimitCount,omitempty" tf:"rate_limit_count,omitempty"`
 
-	// Length of time in seconds that will be considered when checking the rate limit.
+	// Length of time in seconds that will be considered when checking the rate limit. Requires a Sentry plan that supports per-key rate limits.
 	RateLimitWindow *float64 `json:"rateLimitWindow,omitempty" tf:"rate_limit_window,omitempty"`
 }
 
@@ -161,11 +161,11 @@ type ProjectKeyParameters struct {
 	// +kubebuilder:validation:Optional
 	ProjectSelector *v2.NamespacedSelector `json:"projectSelector,omitempty" tf:"-"`
 
-	// Number of events that can be reported within the rate limit window.
+	// Number of events that can be reported within the rate limit window. Requires a Sentry plan that supports per-key rate limits.
 	// +kubebuilder:validation:Optional
 	RateLimitCount *float64 `json:"rateLimitCount,omitempty" tf:"rate_limit_count,omitempty"`
 
-	// Length of time in seconds that will be considered when checking the rate limit.
+	// Length of time in seconds that will be considered when checking the rate limit. Requires a Sentry plan that supports per-key rate limits.
 	// +kubebuilder:validation:Optional
 	RateLimitWindow *float64 `json:"rateLimitWindow,omitempty" tf:"rate_limit_window,omitempty"`
 }

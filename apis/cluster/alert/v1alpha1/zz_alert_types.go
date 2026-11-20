@@ -645,7 +645,7 @@ type EventFrequencyPercentFiltersParameters struct {
 
 type EventFrequencyPercentInitParameters struct {
 
-	// The time period to compare against. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period to compare against. Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
 	ComparisonInterval *string `json:"comparisonInterval,omitempty" tf:"comparison_interval,omitempty"`
 
 	Filters []EventFrequencyPercentFiltersInitParameters `json:"filters,omitempty" tf:"filters,omitempty"`
@@ -659,7 +659,7 @@ type EventFrequencyPercentInitParameters struct {
 
 type EventFrequencyPercentObservation struct {
 
-	// The time period to compare against. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period to compare against. Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
 	ComparisonInterval *string `json:"comparisonInterval,omitempty" tf:"comparison_interval,omitempty"`
 
 	Filters []EventFrequencyPercentFiltersObservation `json:"filters,omitempty" tf:"filters,omitempty"`
@@ -673,7 +673,7 @@ type EventFrequencyPercentObservation struct {
 
 type EventFrequencyPercentParameters struct {
 
-	// The time period to compare against. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period to compare against. Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
 	// +kubebuilder:validation:Optional
 	ComparisonInterval *string `json:"comparisonInterval" tf:"comparison_interval,omitempty"`
 
@@ -1415,7 +1415,7 @@ type PagerdutyParameters struct {
 
 type PercentSessionsCountInitParameters struct {
 
-	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is more than `value` in `interval`. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is more than `value` in `interval`. Valid values are: `1m`, `5m`, `10m`, `30m`, and `1h`.
 	Interval *string `json:"interval,omitempty" tf:"interval,omitempty"`
 
 	// A positive integer representing the number of events in an issue that must come in before the alert will fire.
@@ -1424,7 +1424,7 @@ type PercentSessionsCountInitParameters struct {
 
 type PercentSessionsCountObservation struct {
 
-	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is more than `value` in `interval`. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is more than `value` in `interval`. Valid values are: `1m`, `5m`, `10m`, `30m`, and `1h`.
 	Interval *string `json:"interval,omitempty" tf:"interval,omitempty"`
 
 	// A positive integer representing the number of events in an issue that must come in before the alert will fire.
@@ -1433,7 +1433,7 @@ type PercentSessionsCountObservation struct {
 
 type PercentSessionsCountParameters struct {
 
-	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is more than `value` in `interval`. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is more than `value` in `interval`. Valid values are: `1m`, `5m`, `10m`, `30m`, and `1h`.
 	// +kubebuilder:validation:Optional
 	Interval *string `json:"interval" tf:"interval,omitempty"`
 
@@ -1493,12 +1493,12 @@ type PercentSessionsPercentFiltersParameters struct {
 
 type PercentSessionsPercentInitParameters struct {
 
-	// The time period to compare against. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period to compare against. Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
 	ComparisonInterval *string `json:"comparisonInterval,omitempty" tf:"comparison_interval,omitempty"`
 
 	Filters []PercentSessionsPercentFiltersInitParameters `json:"filters,omitempty" tf:"filters,omitempty"`
 
-	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is `comparisonInterval` percent higher `value` compared to `interval`. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is `comparisonInterval` percent higher `value` compared to `interval`. Valid values are: `1m`, `5m`, `10m`, `30m`, and `1h`.
 	Interval *string `json:"interval,omitempty" tf:"interval,omitempty"`
 
 	// A positive integer representing the number of events in an issue that must come in before the alert will fire.
@@ -1507,12 +1507,12 @@ type PercentSessionsPercentInitParameters struct {
 
 type PercentSessionsPercentObservation struct {
 
-	// The time period to compare against. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period to compare against. Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
 	ComparisonInterval *string `json:"comparisonInterval,omitempty" tf:"comparison_interval,omitempty"`
 
 	Filters []PercentSessionsPercentFiltersObservation `json:"filters,omitempty" tf:"filters,omitempty"`
 
-	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is `comparisonInterval` percent higher `value` compared to `interval`. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is `comparisonInterval` percent higher `value` compared to `interval`. Valid values are: `1m`, `5m`, `10m`, `30m`, and `1h`.
 	Interval *string `json:"interval,omitempty" tf:"interval,omitempty"`
 
 	// A positive integer representing the number of events in an issue that must come in before the alert will fire.
@@ -1521,14 +1521,14 @@ type PercentSessionsPercentObservation struct {
 
 type PercentSessionsPercentParameters struct {
 
-	// The time period to compare against. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period to compare against. Valid values are: `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
 	// +kubebuilder:validation:Optional
 	ComparisonInterval *string `json:"comparisonInterval" tf:"comparison_interval,omitempty"`
 
 	// +kubebuilder:validation:Optional
 	Filters []PercentSessionsPercentFiltersParameters `json:"filters,omitempty" tf:"filters,omitempty"`
 
-	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is `comparisonInterval` percent higher `value` compared to `interval`. Valid values are: `1m`, `5m`, `15m`, `1h`, `1d`, `1w`, and `30d`.
+	// The time period in which to evaluate the value. e.g. Percentage of sessions affected by an issue is `comparisonInterval` percent higher `value` compared to `interval`. Valid values are: `1m`, `5m`, `10m`, `30m`, and `1h`.
 	// +kubebuilder:validation:Optional
 	Interval *string `json:"interval" tf:"interval,omitempty"`
 
@@ -1622,10 +1622,10 @@ type SettingsParameters struct {
 
 type SlackInitParameters struct {
 
-	// The Slack channel ID to send the notification to. This is an optional field that can be used to avoid rate-limiting.
+	// The Slack channel ID to send the notification to. If `channel_name` is omitted, Sentry resolves the channel name from this ID. Set it to avoid rate-limiting and to keep the alert valid when the channel is renamed.
 	ChannelID *string `json:"channelId,omitempty" tf:"channel_id,omitempty"`
 
-	// The name of the Slack channel to send the notification to (e.g., #critical, Jane Schmidt).
+	// The name of the Slack channel to send the notification to (e.g., #critical, Jane Schmidt). If omitted, Sentry resolves the name from `channel_id`. At least one of `channel_name` or `channel_id` must be set.
 	ChannelName *string `json:"channelName,omitempty" tf:"channel_name,omitempty"`
 
 	// The ID of the Slack integration.
@@ -1640,10 +1640,10 @@ type SlackInitParameters struct {
 
 type SlackObservation struct {
 
-	// The Slack channel ID to send the notification to. This is an optional field that can be used to avoid rate-limiting.
+	// The Slack channel ID to send the notification to. If `channel_name` is omitted, Sentry resolves the channel name from this ID. Set it to avoid rate-limiting and to keep the alert valid when the channel is renamed.
 	ChannelID *string `json:"channelId,omitempty" tf:"channel_id,omitempty"`
 
-	// The name of the Slack channel to send the notification to (e.g., #critical, Jane Schmidt).
+	// The name of the Slack channel to send the notification to (e.g., #critical, Jane Schmidt). If omitted, Sentry resolves the name from `channel_id`. At least one of `channel_name` or `channel_id` must be set.
 	ChannelName *string `json:"channelName,omitempty" tf:"channel_name,omitempty"`
 
 	// The ID of the Slack integration.
@@ -1658,13 +1658,13 @@ type SlackObservation struct {
 
 type SlackParameters struct {
 
-	// The Slack channel ID to send the notification to. This is an optional field that can be used to avoid rate-limiting.
+	// The Slack channel ID to send the notification to. If `channel_name` is omitted, Sentry resolves the channel name from this ID. Set it to avoid rate-limiting and to keep the alert valid when the channel is renamed.
 	// +kubebuilder:validation:Optional
 	ChannelID *string `json:"channelId,omitempty" tf:"channel_id,omitempty"`
 
-	// The name of the Slack channel to send the notification to (e.g., #critical, Jane Schmidt).
+	// The name of the Slack channel to send the notification to (e.g., #critical, Jane Schmidt). If omitted, Sentry resolves the name from `channel_id`. At least one of `channel_name` or `channel_id` must be set.
 	// +kubebuilder:validation:Optional
-	ChannelName *string `json:"channelName" tf:"channel_name,omitempty"`
+	ChannelName *string `json:"channelName,omitempty" tf:"channel_name,omitempty"`
 
 	// The ID of the Slack integration.
 	// +kubebuilder:validation:Optional

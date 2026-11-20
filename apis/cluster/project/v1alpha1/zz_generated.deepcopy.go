@@ -1033,6 +1033,16 @@ func (in *ProjectInitParameters) DeepCopyInto(out *ProjectInitParameters) {
 		*out = new(ClientSecurityInitParameters)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.DataScrubber != nil {
+		in, out := &in.DataScrubber, &out.DataScrubber
+		*out = new(bool)
+		**out = **in
+	}
+	if in.DataScrubberDefaults != nil {
+		in, out := &in.DataScrubberDefaults, &out.DataScrubberDefaults
+		*out = new(bool)
+		**out = **in
+	}
 	if in.DefaultKey != nil {
 		in, out := &in.DefaultKey, &out.DefaultKey
 		*out = new(bool)
@@ -1104,10 +1114,47 @@ func (in *ProjectInitParameters) DeepCopyInto(out *ProjectInitParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.RelayAutomaticJSONExpansion != nil {
+		in, out := &in.RelayAutomaticJSONExpansion, &out.RelayAutomaticJSONExpansion
+		*out = new(bool)
+		**out = **in
+	}
+	if in.RelayPiiConfig != nil {
+		in, out := &in.RelayPiiConfig, &out.RelayPiiConfig
+		*out = new(string)
+		**out = **in
+	}
 	if in.ResolveAge != nil {
 		in, out := &in.ResolveAge, &out.ResolveAge
 		*out = new(float64)
 		**out = **in
+	}
+	if in.SafeFields != nil {
+		in, out := &in.SafeFields, &out.SafeFields
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
+	}
+	if in.ScrubIPAddresses != nil {
+		in, out := &in.ScrubIPAddresses, &out.ScrubIPAddresses
+		*out = new(bool)
+		**out = **in
+	}
+	if in.SensitiveFields != nil {
+		in, out := &in.SensitiveFields, &out.SensitiveFields
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
 	}
 	if in.Teams != nil {
 		in, out := &in.Teams, &out.Teams
@@ -1468,6 +1515,16 @@ func (in *ProjectObservation) DeepCopyInto(out *ProjectObservation) {
 		*out = new(ClientSecurityObservation)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.DataScrubber != nil {
+		in, out := &in.DataScrubber, &out.DataScrubber
+		*out = new(bool)
+		**out = **in
+	}
+	if in.DataScrubberDefaults != nil {
+		in, out := &in.DataScrubberDefaults, &out.DataScrubberDefaults
+		*out = new(bool)
+		**out = **in
+	}
 	if in.DefaultKey != nil {
 		in, out := &in.DefaultKey, &out.DefaultKey
 		*out = new(bool)
@@ -1550,10 +1607,47 @@ func (in *ProjectObservation) DeepCopyInto(out *ProjectObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.RelayAutomaticJSONExpansion != nil {
+		in, out := &in.RelayAutomaticJSONExpansion, &out.RelayAutomaticJSONExpansion
+		*out = new(bool)
+		**out = **in
+	}
+	if in.RelayPiiConfig != nil {
+		in, out := &in.RelayPiiConfig, &out.RelayPiiConfig
+		*out = new(string)
+		**out = **in
+	}
 	if in.ResolveAge != nil {
 		in, out := &in.ResolveAge, &out.ResolveAge
 		*out = new(float64)
 		**out = **in
+	}
+	if in.SafeFields != nil {
+		in, out := &in.SafeFields, &out.SafeFields
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
+	}
+	if in.ScrubIPAddresses != nil {
+		in, out := &in.ScrubIPAddresses, &out.ScrubIPAddresses
+		*out = new(bool)
+		**out = **in
+	}
+	if in.SensitiveFields != nil {
+		in, out := &in.SensitiveFields, &out.SensitiveFields
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
 	}
 	if in.Teams != nil {
 		in, out := &in.Teams, &out.Teams
@@ -1860,6 +1954,16 @@ func (in *ProjectParameters) DeepCopyInto(out *ProjectParameters) {
 		*out = new(ClientSecurityParameters)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.DataScrubber != nil {
+		in, out := &in.DataScrubber, &out.DataScrubber
+		*out = new(bool)
+		**out = **in
+	}
+	if in.DataScrubberDefaults != nil {
+		in, out := &in.DataScrubberDefaults, &out.DataScrubberDefaults
+		*out = new(bool)
+		**out = **in
+	}
 	if in.DefaultKey != nil {
 		in, out := &in.DefaultKey, &out.DefaultKey
 		*out = new(bool)
@@ -1931,10 +2035,47 @@ func (in *ProjectParameters) DeepCopyInto(out *ProjectParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.RelayAutomaticJSONExpansion != nil {
+		in, out := &in.RelayAutomaticJSONExpansion, &out.RelayAutomaticJSONExpansion
+		*out = new(bool)
+		**out = **in
+	}
+	if in.RelayPiiConfig != nil {
+		in, out := &in.RelayPiiConfig, &out.RelayPiiConfig
+		*out = new(string)
+		**out = **in
+	}
 	if in.ResolveAge != nil {
 		in, out := &in.ResolveAge, &out.ResolveAge
 		*out = new(float64)
 		**out = **in
+	}
+	if in.SafeFields != nil {
+		in, out := &in.SafeFields, &out.SafeFields
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
+	}
+	if in.ScrubIPAddresses != nil {
+		in, out := &in.ScrubIPAddresses, &out.ScrubIPAddresses
+		*out = new(bool)
+		**out = **in
+	}
+	if in.SensitiveFields != nil {
+		in, out := &in.SensitiveFields, &out.SensitiveFields
+		*out = make([]*string, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(string)
+				**out = **in
+			}
+		}
 	}
 	if in.Teams != nil {
 		in, out := &in.Teams, &out.Teams
