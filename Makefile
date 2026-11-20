@@ -50,7 +50,7 @@ NPROCS ?= 1
 # to half the number of CPU cores.
 GO_TEST_PARALLEL := $(shell echo $$(( $(NPROCS) / 2 )))
 
-GOLANGCILINT_VERSION ?= 2.11.4
+GOLANGCILINT_VERSION ?= 2.15.0
 # Provider family sub-packages to build with the upbound build system. Use "config" for the
 # family provider, or list individual API groups (e.g., "team project").
 SUBPACKAGES ?= config
