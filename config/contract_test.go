@@ -85,6 +85,12 @@ var contracts = map[string]stateContract{
 	"sentry_metric_alert":        {params: map[string]any{"organization": "acme", "project": "web"}, stateID: "acme/web/7", externalName: "7"},
 	"sentry_dashboard":           {params: map[string]any{"organization": "acme"}, stateID: "acme/9", externalName: "9"},
 
+	// State id and import string are the organization slug.
+	"sentry_organization_data_scrubbing": {
+		params:  map[string]any{"organization": "acme"},
+		stateID: "acme", state: map[string]any{"organization": "acme"}, externalName: "acme",
+	},
+
 	"sentry_plugin": {
 		params:  map[string]any{"organization": "acme", "project": "web", "plugin": "slack"},
 		stateID: "slack", state: map[string]any{"plugin": "slack"}, externalName: "slack", importID: "slack",
@@ -127,7 +133,7 @@ func TestEveryResourceHasAStateContract(t *testing.T) {
 	}
 }
 
-// TestExternalNameRoundTrip checks, for all 24 resources, that the synthetic
+// TestExternalNameRoundTrip checks, for all 25 resources, that the synthetic
 // state id Upjet writes equals the id the provider stores, and that the
 // external name is recovered from a stored state.
 func TestExternalNameRoundTrip(t *testing.T) {

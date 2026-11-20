@@ -1,0 +1,13 @@
+apiVersion: organization.upjet-sentry.upbound.io/v1alpha1
+kind: DataScrubbing
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    dataScrubber: true
+    scrubIpAddresses: true
+    sensitiveFields:
+      - password
+  providerConfigRef:
+    name: default

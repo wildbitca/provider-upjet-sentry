@@ -23,6 +23,7 @@ var wantResources = []string{
 	"sentry_notification_action",
 	"sentry_organization",
 	"sentry_organization_code_mapping",
+	"sentry_organization_data_scrubbing",
 	"sentry_organization_member",
 	"sentry_organization_repository",
 	"sentry_plugin",

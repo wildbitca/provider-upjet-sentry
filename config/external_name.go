@@ -140,6 +140,10 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	// Retained here for parameter-driven external name configuration when managed with Create/Update.
 	"sentry_all_projects_spike_protection": paramDrivenID(
 		[]string{"organization"}, []string{"organization"}),
+	// One data scrubbing configuration per organization. The state id and the
+	// import string are both the organization slug (jianyuan/sentry v0.16.1).
+	"sentry_organization_data_scrubbing": paramDrivenID(
+		[]string{"organization"}, []string{"organization"}),
 }
 
 // ExternalNameConfigurations returns the list of all ExternalName configured resources.

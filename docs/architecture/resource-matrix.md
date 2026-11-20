@@ -1,6 +1,6 @@
 # Resource matrix
 
-24 managed resources of `jianyuan/sentry` v0.15.8, all generated, none deferred. Every resource exists in the cluster-scoped tree (`<group>.upjet-sentry.upbound.io`) and the namespaced tree (`<group>.upjet-sentry.m.upbound.io`), version `v1alpha1`.
+25 managed resources of `jianyuan/sentry` v0.16.1, all generated, none deferred. Every resource exists in the cluster-scoped tree (`<group>.upjet-sentry.upbound.io`) and the namespaced tree (`<group>.upjet-sentry.m.upbound.io`), version `v1alpha1`.
 
 Group and Kind are a **public contract**; `config/provider_test.go` fails when they change. Upjet derives the default Kind by dropping the first word after the `sentry_` prefix (`sentry_cron_monitor` would become `Monitor`), so every Kind is set explicitly.
 
@@ -12,6 +12,7 @@ Class: A bare provider-assigned id in state, B composite id in state, C slug is 
 | `sentry_organization_member` | organization | `OrganizationMember` | B | member id; id `org/member` | | ok |
 | `sentry_organization_code_mapping` | organization | `OrganizationCodeMapping` | A | provider id | | ok |
 | `sentry_organization_repository` | organization | `OrganizationRepository` | A | provider id | | ok |
+| `sentry_organization_data_scrubbing` | organization | `DataScrubbing` | P | organization slug (id and import string) | | ok |
 | `sentry_team` | team | `Team` | C | slug (seeded) | omitted `team_id` (deprecated) | ok |
 | `sentry_team_member` | team | `TeamMember` | P | `member_id`; id `org/team/member` | | ok |
 | `sentry_project` | project | `Project` | C | slug (seeded, immutable in practice) | `client_security.security_token` -> `securityTokenSecretRef` | ok |
@@ -51,4 +52,4 @@ Class: A bare provider-assigned id in state, B composite id in state, C slug is 
 
 ## Verification status of the identity classes
 
-Class A (bare provider id) and class B (composite) follow the stored state ids in the upstream research table, checked in `config/contract_test.go` as a round trip for all 24 resources. Whether the live provider accepts the synthetic state at `Read` is **unverified** for every class.
+Class A (bare provider id) and class B (composite) follow the stored state ids in the upstream research table, checked in `config/contract_test.go` as a round trip for all 25 resources. Whether the live provider accepts the synthetic state at `Read` is **unverified** for every class.

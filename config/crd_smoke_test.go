@@ -85,7 +85,7 @@ func TestCRDsPerGroup(t *testing.T) {
 		}
 	}
 
-	// 24 resources x 2 trees + ProviderConfig kinds, nothing else.
+	// 25 resources x 2 trees + ProviderConfig kinds, nothing else.
 	var resources, other []string
 	for n, c := range crds {
 		if strings.HasPrefix(c.Spec.Group, "upjet-sentry.") {

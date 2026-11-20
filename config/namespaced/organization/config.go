@@ -34,4 +34,10 @@ func Configure(p *config.Provider) {
 		r.Kind = "OrganizationRepository"
 		r.References["organization"] = common.Organization()
 	})
+
+	p.AddResourceConfigurator("sentry_organization_data_scrubbing", func(r *config.Resource) {
+		r.ShortGroup = group
+		r.Kind = "DataScrubbing"
+		r.References["organization"] = common.Organization()
+	})
 }

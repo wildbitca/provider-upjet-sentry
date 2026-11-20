@@ -58,6 +58,16 @@ func (in *DataScrubbingInitParameters) DeepCopyInto(out *DataScrubbingInitParame
 		*out = new(string)
 		**out = **in
 	}
+	if in.OrganizationRef != nil {
+		in, out := &in.OrganizationRef, &out.OrganizationRef
+		*out = new(v2.NamespacedReference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.OrganizationSelector != nil {
+		in, out := &in.OrganizationSelector, &out.OrganizationSelector
+		*out = new(v2.NamespacedSelector)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.RelayPiiConfig != nil {
 		in, out := &in.RelayPiiConfig, &out.RelayPiiConfig
 		*out = new(string)
@@ -218,6 +228,16 @@ func (in *DataScrubbingParameters) DeepCopyInto(out *DataScrubbingParameters) {
 		in, out := &in.Organization, &out.Organization
 		*out = new(string)
 		**out = **in
+	}
+	if in.OrganizationRef != nil {
+		in, out := &in.OrganizationRef, &out.OrganizationRef
+		*out = new(v2.NamespacedReference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.OrganizationSelector != nil {
+		in, out := &in.OrganizationSelector, &out.OrganizationSelector
+		*out = new(v2.NamespacedSelector)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.RelayPiiConfig != nil {
 		in, out := &in.RelayPiiConfig, &out.RelayPiiConfig

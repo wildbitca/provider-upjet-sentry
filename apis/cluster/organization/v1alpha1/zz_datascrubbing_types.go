@@ -22,7 +22,16 @@ type DataScrubbingInitParameters struct {
 	DataScrubberDefaults *bool `json:"dataScrubberDefaults,omitempty" tf:"data_scrubber_defaults,omitempty"`
 
 	// The slug or internal ID of the organization.
+	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
 	Organization *string `json:"organization,omitempty" tf:"organization,omitempty"`
+
+	// Reference to a Organization in organization to populate organization.
+	// +kubebuilder:validation:Optional
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
+
+	// Selector for a Organization in organization to populate organization.
+	// +kubebuilder:validation:Optional
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Advanced data scrubbing rules, as a JSON string holding the `rules` and `applications` objects. Build it with `jsonencode()`. The value replaces all advanced data scrubbing rules. For details, see [Advanced Data Scrubbing](https://docs.sentry.io/security-legal-pii/scrubbing/advanced-datascrubbing/). These rules apply to all projects. Omit it to remove all rules.
 	RelayPiiConfig *string `json:"relayPiiConfig,omitempty" tf:"relay_pii_config,omitempty"`
@@ -78,8 +87,17 @@ type DataScrubbingParameters struct {
 	DataScrubberDefaults *bool `json:"dataScrubberDefaults,omitempty" tf:"data_scrubber_defaults,omitempty"`
 
 	// The slug or internal ID of the organization.
+	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
 	// +kubebuilder:validation:Optional
 	Organization *string `json:"organization,omitempty" tf:"organization,omitempty"`
+
+	// Reference to a Organization in organization to populate organization.
+	// +kubebuilder:validation:Optional
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
+
+	// Selector for a Organization in organization to populate organization.
+	// +kubebuilder:validation:Optional
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Advanced data scrubbing rules, as a JSON string holding the `rules` and `applications` objects. Build it with `jsonencode()`. The value replaces all advanced data scrubbing rules. For details, see [Advanced Data Scrubbing](https://docs.sentry.io/security-legal-pii/scrubbing/advanced-datascrubbing/). These rules apply to all projects. Omit it to remove all rules.
 	// +kubebuilder:validation:Optional
@@ -136,9 +154,8 @@ type DataScrubbingStatus struct {
 type DataScrubbing struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.organization) || (has(self.initProvider) && has(self.initProvider.organization))",message="spec.forProvider.organization is a required parameter"
-	Spec   DataScrubbingSpec   `json:"spec"`
-	Status DataScrubbingStatus `json:"status,omitempty"`
+	Spec              DataScrubbingSpec   `json:"spec"`
+	Status            DataScrubbingStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
