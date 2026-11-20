@@ -1,11 +1,11 @@
 # Architecture overview
 
-`provider-upjet-sentry` is an Upjet provider that wraps the Terraform provider `jianyuan/sentry` v0.15.8. It runs the unmodified provider binary through OpenTofu (the "CLI" path), like the sibling `provider-upjet-*` repositories (bunnynet, cloudflare and the template provider).
+`provider-upjet-sentry` is an Upjet provider that wraps the Terraform provider `jianyuan/sentry` v0.16.1. It runs the unmodified provider binary through OpenTofu (the "CLI" path), like the sibling `provider-upjet-*` repositories (bunnynet, cloudflare and the template provider).
 
 ## Why the CLI path
 
 - `jianyuan/sentry` is itself a mux provider (SDKv2 for 7 resources, Plugin Framework for 17). The release binary already contains the mux and speaks protocol 6, so OpenTofu needs no extra wiring.
-- The no-fork path (`TerraformPluginFrameworkIncludeList`) would require importing the provider's Go packages. The Framework resources live under `internal/`, which the Go compiler forbids importing from another module, so 17 of 24 resources could never use it.
+- The no-fork path (`TerraformPluginFrameworkIncludeList`) would require importing the provider's Go packages. The Framework resources live under `internal/`, which the Go compiler forbids importing from another module, so 18 of 25 resources could never use it.
 - Cost: one OpenTofu workspace per operation (more memory and latency than in-process), the same as our other providers.
 
 Only `ujconfig.WithIncludeList` is used. Nothing in the repository imports `terraform-plugin-framework`, `terraform-plugin-sdk` (except `config/common`, to edit schemas) or `terraform-plugin-mux`.
@@ -24,7 +24,7 @@ Only `ujconfig.WithIncludeList` is used. Nothing in the repository imports `terr
 | `config/` | Hand-written configuration. `provider.go`, `external_name.go`, `common/` (shared references and `Omit`), `{cluster,namespaced}/<group>/config.go` |
 | `apis/`, `internal/controller/`, `cmd/provider/` | Generated (`zz_*`), plus hand-written `ProviderConfig` types and controllers |
 | `internal/clients/upjet-sentry.go` | `TerraformSetupBuilder`, credential parsing |
-| `package/crds/` | Generated CRDs: 24 resources x 2 scopes + ProviderConfig kinds |
+| `package/crds/` | Generated CRDs: 25 resources x 2 scopes + ProviderConfig kinds |
 | `cluster/images/provider-upjet-sentry/` | Dockerfile (OpenTofu + provider binary, checksum verified) |
 | `scripts/` | `build-family.sh`, `check-groups.sh`, `check-workflows.sh` |
 | `examples/` | One manifest per resource |

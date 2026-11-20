@@ -9,9 +9,9 @@ import (
 
 	"github.com/crossplane/upjet/v2/pkg/controller"
 
-	datascrubbing "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/datascrubbing"
 	organization "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organization"
 	organizationcodemapping "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationcodemapping"
+	organizationdatascrubbing "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationdatascrubbing"
 	organizationmember "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationmember"
 	organizationrepository "github.com/wildbitca/provider-upjet-sentry/internal/controller/namespaced/organization/organizationrepository"
 )
@@ -20,9 +20,9 @@ import (
 // the supplied manager.
 func Setup_organization(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		datascrubbing.Setup,
 		organization.Setup,
 		organizationcodemapping.Setup,
+		organizationdatascrubbing.Setup,
 		organizationmember.Setup,
 		organizationrepository.Setup,
 	} {
@@ -37,9 +37,9 @@ func Setup_organization(mgr ctrl.Manager, o controller.Options) error {
 // the supplied manager gated.
 func SetupGated_organization(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		datascrubbing.SetupGated,
 		organization.SetupGated,
 		organizationcodemapping.SetupGated,
+		organizationdatascrubbing.SetupGated,
 		organizationmember.SetupGated,
 		organizationrepository.SetupGated,
 	} {
@@ -53,9 +53,9 @@ func SetupGated_organization(mgr ctrl.Manager, o controller.Options) error {
 // SetupWebhookWithManager_organization registers conversion webhooks for all resource kinds in the group.
 func SetupWebhookWithManager_organization(mgr ctrl.Manager) error {
 	for _, setup := range []func(ctrl.Manager) error{
-		datascrubbing.SetupWebhookWithManager,
 		organization.SetupWebhookWithManager,
 		organizationcodemapping.SetupWebhookWithManager,
+		organizationdatascrubbing.SetupWebhookWithManager,
 		organizationmember.SetupWebhookWithManager,
 		organizationrepository.SetupWebhookWithManager,
 	} {

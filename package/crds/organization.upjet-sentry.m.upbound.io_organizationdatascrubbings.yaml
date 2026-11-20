@@ -4,7 +4,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.23.0
-  name: datascrubbings.organization.upjet-sentry.m.upbound.io
+  name: organizationdatascrubbings.organization.upjet-sentry.m.upbound.io
 spec:
   group: organization.upjet-sentry.m.upbound.io
   names:
@@ -12,10 +12,10 @@ spec:
     - crossplane
     - managed
     - upjet-sentry
-    kind: DataScrubbing
-    listKind: DataScrubbingList
-    plural: datascrubbings
-    singular: datascrubbing
+    kind: OrganizationDataScrubbing
+    listKind: OrganizationDataScrubbingList
+    plural: organizationdatascrubbings
+    singular: organizationdatascrubbing
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: DataScrubbing is the Schema for the DataScrubbings API. <no value>
+        description: OrganizationDataScrubbing is the Schema for the OrganizationDataScrubbings
+          API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +55,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: DataScrubbingSpec defines the desired state of DataScrubbing
+            description: OrganizationDataScrubbingSpec defines the desired state of
+              OrganizationDataScrubbing
             properties:
               forProvider:
                 properties:
@@ -370,7 +372,8 @@ spec:
             - forProvider
             type: object
           status:
-            description: DataScrubbingStatus defines the observed state of DataScrubbing.
+            description: OrganizationDataScrubbingStatus defines the observed state
+              of OrganizationDataScrubbing.
             properties:
               atProvider:
                 properties:

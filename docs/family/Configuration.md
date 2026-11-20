@@ -19,7 +19,7 @@ Installing a sub-provider installs `provider-family-sentry` automatically. Insta
 
 ## Monolith
 
-The repository also builds a monolith provider (`provider-upjet-sentry`, all 24 resources, 48 CRDs) for local testing. It is not published.
+The repository also builds a monolith provider (`provider-upjet-sentry`, all 25 resources, 50 CRDs) for local testing. It is not published.
 
 ## ProviderConfig
 

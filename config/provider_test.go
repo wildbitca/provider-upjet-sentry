@@ -14,7 +14,7 @@ var wantGroupKind = map[string][2]string{
 	"sentry_organization_member":           {"organization", "OrganizationMember"},
 	"sentry_organization_code_mapping":     {"organization", "OrganizationCodeMapping"},
 	"sentry_organization_repository":       {"organization", "OrganizationRepository"},
-	"sentry_organization_data_scrubbing":   {"organization", "DataScrubbing"},
+	"sentry_organization_data_scrubbing":   {"organization", "OrganizationDataScrubbing"},
 	"sentry_team":                          {"team", "Team"},
 	"sentry_team_member":                   {"team", "TeamMember"},
 	"sentry_project":                       {"project", "Project"},

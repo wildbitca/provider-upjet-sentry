@@ -8,8 +8,8 @@ package v1alpha1
 
 import resource "github.com/crossplane/crossplane-runtime/v2/pkg/resource"
 
-// GetItems of this DataScrubbingList.
-func (l *DataScrubbingList) GetItems() []resource.Managed {
+// GetItems of this OrganizationCodeMappingList.
+func (l *OrganizationCodeMappingList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -17,8 +17,8 @@ func (l *DataScrubbingList) GetItems() []resource.Managed {
 	return items
 }
 
-// GetItems of this OrganizationCodeMappingList.
-func (l *OrganizationCodeMappingList) GetItems() []resource.Managed {
+// GetItems of this OrganizationDataScrubbingList.
+func (l *OrganizationDataScrubbingList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]

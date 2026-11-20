@@ -13,8 +13,8 @@ import (
 	client "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// ResolveReferences of this DataScrubbing.
-func (mg *DataScrubbing) ResolveReferences(ctx context.Context, c client.Reader) error {
+// ResolveReferences of this OrganizationCodeMapping.
+func (mg *OrganizationCodeMapping) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPINamespacedResolver(c, mg)
 
 	var rsp reference.NamespacedResolutionResponse
@@ -57,8 +57,8 @@ func (mg *DataScrubbing) ResolveReferences(ctx context.Context, c client.Reader)
 	return nil
 }
 
-// ResolveReferences of this OrganizationCodeMapping.
-func (mg *OrganizationCodeMapping) ResolveReferences(ctx context.Context, c client.Reader) error {
+// ResolveReferences of this OrganizationDataScrubbing.
+func (mg *OrganizationDataScrubbing) ResolveReferences(ctx context.Context, c client.Reader) error {
 	r := reference.NewAPINamespacedResolver(c, mg)
 
 	var rsp reference.NamespacedResolutionResponse

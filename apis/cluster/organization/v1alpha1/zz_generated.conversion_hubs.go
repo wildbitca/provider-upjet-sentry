@@ -7,13 +7,13 @@
 package v1alpha1
 
 // Hub marks this type as a conversion hub.
-func (tr *DataScrubbing) Hub() {}
-
-// Hub marks this type as a conversion hub.
 func (tr *Organization) Hub() {}
 
 // Hub marks this type as a conversion hub.
 func (tr *OrganizationCodeMapping) Hub() {}
+
+// Hub marks this type as a conversion hub.
+func (tr *OrganizationDataScrubbing) Hub() {}
 
 // Hub marks this type as a conversion hub.
 func (tr *OrganizationMember) Hub() {}

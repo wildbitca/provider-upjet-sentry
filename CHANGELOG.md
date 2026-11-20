@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - Unreleased
+
+### Added
+
+- New resource `OrganizationDataScrubbing` (`sentry_organization_data_scrubbing`) in the `organization` group, cluster-scoped and namespaced. The external name is the organization slug.
+- New data-scrubbing fields on `Project` from the upstream provider 0.16.1.
+
+### Changed
+
+- `jianyuan/sentry` v0.15.8 -> v0.16.1 (25 managed resources).
+- OpenTofu 1.13.2 -> 1.13.9.
+
 ## [1.0.0] - 2026-10-29
 
 First release. Wraps `jianyuan/sentry` v0.15.8 (OpenTofu 1.13.2) on Upjet v2.5.1 pinned to the `wildbitca/upjet` fork tag `v2.5.1-wb.1` (see `docs/architecture/upjet-fork.md`). The `0.1.0` entry below was never tagged or published; `1.0.0` supersedes it and is the first published version.

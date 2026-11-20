@@ -1,6 +1,6 @@
 # Status and open items
 
-All 24 resources of `jianyuan/sentry` v0.15.8 are implemented in seven API groups and two API trees (cluster and namespaced). Generate is idempotent; build, lint, tests, the guardrail scripts and the family package build pass. Evidence: [test-report.md](test-report.md).
+All 25 resources of `jianyuan/sentry` v0.16.1 are implemented in seven API groups and two API trees (cluster and namespaced). Generate is idempotent; build, lint, tests, the guardrail scripts and the family package build pass. Evidence: [test-report.md](test-report.md).
 
 ## Not verified yet
 

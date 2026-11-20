@@ -10,7 +10,7 @@ Run on 2026-10-29 against `jianyuan/sentry` v0.15.8, Upjet fork `github.com/wild
 | S3 | Resources without an `id` attribute | **GO** (round-trip covered by unit tests; runtime unverified) |
 | S4 | `dynamic` attributes and CEL, `jsontypes.Normalized` | **GO** (no `dynamic` type attribute exists; JSON strings stay plain strings) |
 
-No resource was deferred. All 24 resources are generated in both API trees.
+No resource was deferred. All 25 resources are generated in both API trees.
 
 ## S0: nested_type attributes
 

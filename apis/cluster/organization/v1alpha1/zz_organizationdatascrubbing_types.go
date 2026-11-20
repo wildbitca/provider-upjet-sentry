@@ -13,7 +13,7 @@ import (
 	v2 "github.com/crossplane/crossplane/apis/v2/core/v2"
 )
 
-type DataScrubbingInitParameters struct {
+type OrganizationDataScrubbingInitParameters struct {
 
 	// Require server-side data scrubbing for all projects. Defaults to `false`.
 	DataScrubber *bool `json:"dataScrubber,omitempty" tf:"data_scrubber,omitempty"`
@@ -22,16 +22,16 @@ type DataScrubbingInitParameters struct {
 	DataScrubberDefaults *bool `json:"dataScrubberDefaults,omitempty" tf:"data_scrubber_defaults,omitempty"`
 
 	// The slug or internal ID of the organization.
-	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/organization/v1alpha1.Organization
+	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
 	Organization *string `json:"organization,omitempty" tf:"organization,omitempty"`
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Advanced data scrubbing rules, as a JSON string holding the `rules` and `applications` objects. Build it with `jsonencode()`. The value replaces all advanced data scrubbing rules. For details, see [Advanced Data Scrubbing](https://docs.sentry.io/security-legal-pii/scrubbing/advanced-datascrubbing/). These rules apply to all projects. Omit it to remove all rules.
 	RelayPiiConfig *string `json:"relayPiiConfig,omitempty" tf:"relay_pii_config,omitempty"`
@@ -48,7 +48,7 @@ type DataScrubbingInitParameters struct {
 	SensitiveFields []*string `json:"sensitiveFields,omitempty" tf:"sensitive_fields,omitempty"`
 }
 
-type DataScrubbingObservation struct {
+type OrganizationDataScrubbingObservation struct {
 
 	// Require server-side data scrubbing for all projects. Defaults to `false`.
 	DataScrubber *bool `json:"dataScrubber,omitempty" tf:"data_scrubber,omitempty"`
@@ -76,7 +76,7 @@ type DataScrubbingObservation struct {
 	SensitiveFields []*string `json:"sensitiveFields,omitempty" tf:"sensitive_fields,omitempty"`
 }
 
-type DataScrubbingParameters struct {
+type OrganizationDataScrubbingParameters struct {
 
 	// Require server-side data scrubbing for all projects. Defaults to `false`.
 	// +kubebuilder:validation:Optional
@@ -87,17 +87,17 @@ type DataScrubbingParameters struct {
 	DataScrubberDefaults *bool `json:"dataScrubberDefaults,omitempty" tf:"data_scrubber_defaults,omitempty"`
 
 	// The slug or internal ID of the organization.
-	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/namespaced/organization/v1alpha1.Organization
+	// +crossplane:generate:reference:type=github.com/wildbitca/provider-upjet-sentry/apis/cluster/organization/v1alpha1.Organization
 	// +kubebuilder:validation:Optional
 	Organization *string `json:"organization,omitempty" tf:"organization,omitempty"`
 
 	// Reference to a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationRef *v2.NamespacedReference `json:"organizationRef,omitempty" tf:"-"`
+	OrganizationRef *v2.Reference `json:"organizationRef,omitempty" tf:"-"`
 
 	// Selector for a Organization in organization to populate organization.
 	// +kubebuilder:validation:Optional
-	OrganizationSelector *v2.NamespacedSelector `json:"organizationSelector,omitempty" tf:"-"`
+	OrganizationSelector *v2.Selector `json:"organizationSelector,omitempty" tf:"-"`
 
 	// Advanced data scrubbing rules, as a JSON string holding the `rules` and `applications` objects. Build it with `jsonencode()`. The value replaces all advanced data scrubbing rules. For details, see [Advanced Data Scrubbing](https://docs.sentry.io/security-legal-pii/scrubbing/advanced-datascrubbing/). These rules apply to all projects. Omit it to remove all rules.
 	// +kubebuilder:validation:Optional
@@ -118,10 +118,10 @@ type DataScrubbingParameters struct {
 	SensitiveFields []*string `json:"sensitiveFields,omitempty" tf:"sensitive_fields,omitempty"`
 }
 
-// DataScrubbingSpec defines the desired state of DataScrubbing
-type DataScrubbingSpec struct {
-	v2.ManagedResourceSpec `json:",inline"`
-	ForProvider            DataScrubbingParameters `json:"forProvider"`
+// OrganizationDataScrubbingSpec defines the desired state of OrganizationDataScrubbing
+type OrganizationDataScrubbingSpec struct {
+	v2.ClusterManagedResourceSpec `json:",inline"`
+	ForProvider                   OrganizationDataScrubbingParameters `json:"forProvider"`
 	// THIS IS A BETA FIELD. It will be honored
 	// unless the Management Policies feature flag is disabled.
 	// InitProvider holds the same fields as ForProvider, with the exception
@@ -132,49 +132,49 @@ type DataScrubbingSpec struct {
 	// required on creation, but we do not desire to update them after creation,
 	// for example because of an external controller is managing them, like an
 	// autoscaler.
-	InitProvider DataScrubbingInitParameters `json:"initProvider,omitempty"`
+	InitProvider OrganizationDataScrubbingInitParameters `json:"initProvider,omitempty"`
 }
 
-// DataScrubbingStatus defines the observed state of DataScrubbing.
-type DataScrubbingStatus struct {
+// OrganizationDataScrubbingStatus defines the observed state of OrganizationDataScrubbing.
+type OrganizationDataScrubbingStatus struct {
 	v2.ManagedResourceStatus `json:",inline"`
-	AtProvider               DataScrubbingObservation `json:"atProvider,omitempty"`
+	AtProvider               OrganizationDataScrubbingObservation `json:"atProvider,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:storageversion
 
-// DataScrubbing is the Schema for the DataScrubbings API. <no value>
+// OrganizationDataScrubbing is the Schema for the OrganizationDataScrubbings API. <no value>
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:resource:scope=Namespaced,categories={crossplane,managed,upjet-sentry}
-type DataScrubbing struct {
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,upjet-sentry}
+type OrganizationDataScrubbing struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              DataScrubbingSpec   `json:"spec"`
-	Status            DataScrubbingStatus `json:"status,omitempty"`
+	Spec              OrganizationDataScrubbingSpec   `json:"spec"`
+	Status            OrganizationDataScrubbingStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// DataScrubbingList contains a list of DataScrubbings
-type DataScrubbingList struct {
+// OrganizationDataScrubbingList contains a list of OrganizationDataScrubbings
+type OrganizationDataScrubbingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []DataScrubbing `json:"items"`
+	Items           []OrganizationDataScrubbing `json:"items"`
 }
 
 // Repository type metadata.
 var (
-	DataScrubbing_Kind             = "DataScrubbing"
-	DataScrubbing_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: DataScrubbing_Kind}.String()
-	DataScrubbing_KindAPIVersion   = DataScrubbing_Kind + "." + CRDGroupVersion.String()
-	DataScrubbing_GroupVersionKind = CRDGroupVersion.WithKind(DataScrubbing_Kind)
+	OrganizationDataScrubbing_Kind             = "OrganizationDataScrubbing"
+	OrganizationDataScrubbing_GroupKind        = schema.GroupKind{Group: CRDGroup, Kind: OrganizationDataScrubbing_Kind}.String()
+	OrganizationDataScrubbing_KindAPIVersion   = OrganizationDataScrubbing_Kind + "." + CRDGroupVersion.String()
+	OrganizationDataScrubbing_GroupVersionKind = CRDGroupVersion.WithKind(OrganizationDataScrubbing_Kind)
 )
 
 func init() {
-	SchemeBuilder.Register(&DataScrubbing{}, &DataScrubbingList{})
+	SchemeBuilder.Register(&OrganizationDataScrubbing{}, &OrganizationDataScrubbingList{})
 }

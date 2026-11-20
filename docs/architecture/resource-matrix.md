@@ -12,7 +12,7 @@ Class: A bare provider-assigned id in state, B composite id in state, C slug is 
 | `sentry_organization_member` | organization | `OrganizationMember` | B | member id; id `org/member` | | ok |
 | `sentry_organization_code_mapping` | organization | `OrganizationCodeMapping` | A | provider id | | ok |
 | `sentry_organization_repository` | organization | `OrganizationRepository` | A | provider id | | ok |
-| `sentry_organization_data_scrubbing` | organization | `DataScrubbing` | P | organization slug (id and import string) | | ok |
+| `sentry_organization_data_scrubbing` | organization | `OrganizationDataScrubbing` | P | organization slug (id and import string) | | ok |
 | `sentry_team` | team | `Team` | C | slug (seeded) | omitted `team_id` (deprecated) | ok |
 | `sentry_team_member` | team | `TeamMember` | P | `member_id`; id `org/team/member` | | ok |
 | `sentry_project` | project | `Project` | C | slug (seeded, immutable in practice) | `client_security.security_token` -> `securityTokenSecretRef` | ok |

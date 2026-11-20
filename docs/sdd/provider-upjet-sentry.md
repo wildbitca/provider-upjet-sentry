@@ -4,13 +4,13 @@ Status: implemented offline (generation, build, lint, unit tests, package build)
 
 ## 1. Goal
 
-A public Crossplane provider, `github.com/wildbitca/provider-upjet-sentry` (Apache-2.0), that manages Sentry configuration as Kubernetes resources by wrapping `jianyuan/sentry` v0.15.8 through OpenTofu. Same shape as the sibling `provider-upjet-*` repositories.
+A public Crossplane provider, `github.com/wildbitca/provider-upjet-sentry` (Apache-2.0), that manages Sentry configuration as Kubernetes resources by wrapping `jianyuan/sentry` v0.16.1 through OpenTofu. Same shape as the sibling `provider-upjet-*` repositories.
 
 ## 2. Scope
 
 In scope:
 
-- All 24 managed resources of the pinned upstream release, in a cluster-scoped and a namespaced API tree (48 CRDs) plus `ProviderConfig`, `ProviderConfigUsage` and (namespaced) `ClusterProviderConfig`.
+- All 25 managed resources of the pinned upstream release, in a cluster-scoped and a namespaced API tree (50 CRDs) plus `ProviderConfig`, `ProviderConfigUsage` and (namespaced) `ClusterProviderConfig`.
 - Seven API groups and seven sub-providers plus a family package.
 - Credentials as one JSON Secret key (`token`, `base_url`), skipping empty values.
 - Examples, docs, CI and publish workflows, a package build dry-run.

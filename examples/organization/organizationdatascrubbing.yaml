@@ -1,5 +1,5 @@
 apiVersion: organization.upjet-sentry.upbound.io/v1alpha1
-kind: DataScrubbing
+kind: OrganizationDataScrubbing
 metadata:
   name: example
 spec:

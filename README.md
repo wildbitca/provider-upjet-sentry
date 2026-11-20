@@ -1,8 +1,8 @@
 # Provider Sentry
 
-`provider-sentry` is a [Crossplane](https://crossplane.io/) provider built with [Upjet](https://github.com/crossplane/upjet). It exposes XRM-conformant managed resources for [Sentry](https://sentry.io) by wrapping the [`jianyuan/sentry`](https://registry.terraform.io/providers/jianyuan/sentry/latest/docs) Terraform provider (v0.15.8), run through OpenTofu.
+`provider-sentry` is a [Crossplane](https://crossplane.io/) provider built with [Upjet](https://github.com/crossplane/upjet). It exposes XRM-conformant managed resources for [Sentry](https://sentry.io) by wrapping the [`jianyuan/sentry`](https://registry.terraform.io/providers/jianyuan/sentry/latest/docs) Terraform provider (v0.16.1), run through OpenTofu.
 
-It covers all 24 managed resources of the upstream provider, in a cluster-scoped and a namespaced API tree.
+It covers all 25 managed resources of the upstream provider, in a cluster-scoped and a namespaced API tree.
 
 > **Status: first stable release (v1.0.0).** Everything was verified offline (code generation, build, lint, unit tests, package build). Runtime behavior against a live Sentry organization is **unverified**: see [Known issues](#known-issues).
 
