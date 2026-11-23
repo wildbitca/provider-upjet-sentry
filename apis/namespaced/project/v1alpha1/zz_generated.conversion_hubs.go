@@ -13,6 +13,9 @@ func (tr *AllProjectsSpikeProtection) Hub() {}
 func (tr *Project) Hub() {}
 
 // Hub marks this type as a conversion hub.
+func (tr *ProjectCodeowners) Hub() {}
+
+// Hub marks this type as a conversion hub.
 func (tr *ProjectInboundDataFilter) Hub() {}
 
 // Hub marks this type as a conversion hub.

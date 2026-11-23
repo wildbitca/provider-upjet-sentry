@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New resource `ProjectCodeowners` (`sentry_project_codeowners`) in the `project` group, cluster-scoped and namespaced.
+
+### Changed
+
+- `jianyuan/sentry` v0.16.1 -> v0.17.0 (26 managed resources).
+
 ## [1.1.0] - Unreleased
 
 ### Added

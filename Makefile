@@ -8,18 +8,18 @@ export OPENTOFU_VERSION ?= 1.13.9
 
 export TERRAFORM_PROVIDER_SOURCE ?= jianyuan/sentry
 export TERRAFORM_PROVIDER_REPO ?= https://github.com/jianyuan/terraform-provider-sentry
-export TERRAFORM_PROVIDER_VERSION ?= 0.16.1
+export TERRAFORM_PROVIDER_VERSION ?= 0.17.0
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-sentry
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/jianyuan/terraform-provider-sentry/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
-export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-sentry_v0.16.1
+export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-sentry_v0.17.0
 export TERRAFORM_DOCS_PATH ?= docs/resources
 
 # Pinned SHA-256 of the artifacts baked into the images. Update them together with the
 # versions above, from the SHA256SUMS published next to each release.
 export OPENTOFU_SHA256_AMD64 ?= bc44eb6b06446ba83bd4072114891987f590f66cca712737a7f1147c50c539ce
 export OPENTOFU_SHA256_ARM64 ?= 04f7c93828b859d420269ed30f923ffebf09157b5d7fb95bf8d88a4d208b7fa3
-export TERRAFORM_PROVIDER_SHA256_AMD64 ?= 3f3bdba67ca0e3b3cc632b6c55239f905e80d5063ffd0db4636b70b8acd55f9a
-export TERRAFORM_PROVIDER_SHA256_ARM64 ?= 4badeb5770d770197b9eb849a367ebcc26d8da7fb497d4c26d2f92633bad9073
+export TERRAFORM_PROVIDER_SHA256_AMD64 ?= 04e018f2c1469380401339a255e379c72b49e1999aae3be912dc8dc283a00408
+export TERRAFORM_PROVIDER_SHA256_ARM64 ?= 9310d8b4c149f3d3050742e0f898d063d11d18157c32884cfda385a776e616e0
 export TERRAFORM_PROVIDER_LICENSE_SHA256 ?= 17e17df3775e2907abfc0e66cd0e9af02a01fca6accd96dbaf4928615f075d5a
 
 

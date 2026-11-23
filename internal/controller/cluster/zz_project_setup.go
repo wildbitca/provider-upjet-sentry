@@ -11,6 +11,7 @@ import (
 
 	allprojectsspikeprotection "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/allprojectsspikeprotection"
 	project "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/project"
+	projectcodeowners "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectcodeowners"
 	projectinbounddatafilter "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectinbounddatafilter"
 	projectkey "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectkey"
 	projectownership "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectownership"
@@ -25,6 +26,7 @@ func Setup_project(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		allprojectsspikeprotection.Setup,
 		project.Setup,
+		projectcodeowners.Setup,
 		projectinbounddatafilter.Setup,
 		projectkey.Setup,
 		projectownership.Setup,
@@ -45,6 +47,7 @@ func SetupGated_project(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
 		allprojectsspikeprotection.SetupGated,
 		project.SetupGated,
+		projectcodeowners.SetupGated,
 		projectinbounddatafilter.SetupGated,
 		projectkey.SetupGated,
 		projectownership.SetupGated,
@@ -64,6 +67,7 @@ func SetupWebhookWithManager_project(mgr ctrl.Manager) error {
 	for _, setup := range []func(ctrl.Manager) error{
 		allprojectsspikeprotection.SetupWebhookWithManager,
 		project.SetupWebhookWithManager,
+		projectcodeowners.SetupWebhookWithManager,
 		projectinbounddatafilter.SetupWebhookWithManager,
 		projectkey.SetupWebhookWithManager,
 		projectownership.SetupWebhookWithManager,

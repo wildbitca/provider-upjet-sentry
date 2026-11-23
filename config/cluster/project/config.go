@@ -68,4 +68,11 @@ func Configure(p *config.Provider) {
 		r.References["organization"] = common.Organization()
 		r.References["project"] = common.Project()
 	})
+
+	p.AddResourceConfigurator("sentry_project_codeowners", func(r *config.Resource) {
+		r.ShortGroup = group
+		r.Kind = "ProjectCodeowners"
+		r.References["organization"] = common.Organization()
+		r.References["project"] = common.Project()
+	})
 }

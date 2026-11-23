@@ -28,6 +28,7 @@ var wantResources = []string{
 	"sentry_organization_repository",
 	"sentry_plugin",
 	"sentry_project",
+	"sentry_project_codeowners",
 	"sentry_project_inbound_data_filter",
 	"sentry_project_ownership",
 	"sentry_project_spike_protection",
