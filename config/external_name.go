@@ -107,6 +107,7 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"sentry_organization_code_mapping": withImportID(config.IdentifierFromProvider, "organization"),
 	"sentry_organization_repository":   withImportID(config.IdentifierFromProvider, "organization", "integration_type", "integration_id"),
 	"sentry_key":                       withImportID(config.IdentifierFromProvider, "organization", "project"),
+	"sentry_project_codeowners":        withImportID(config.IdentifierFromProvider, "organization", "project"),
 	"sentry_project_symbol_source":     withImportID(config.IdentifierFromProvider, "organization", "project"),
 	"sentry_issue_alert":               withImportID(config.IdentifierFromProvider, "organization", "project"),
 	"sentry_alert":                     withImportID(config.IdentifierFromProvider, "organization"),

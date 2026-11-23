@@ -1,0 +1,12 @@
+apiVersion: project.upjet-sentry.upbound.io/v1alpha1
+kind: ProjectCodeowners
+metadata:
+  name: example
+spec:
+  forProvider:
+    organization: my-org
+    project: my-project
+    codeMappingId: "123"
+    raw: "* @my-org/backend"
+  providerConfigRef:
+    name: default

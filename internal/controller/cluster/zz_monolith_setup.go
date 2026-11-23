@@ -26,6 +26,7 @@ import (
 	organizationrepository "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/organization/organizationrepository"
 	allprojectsspikeprotection "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/allprojectsspikeprotection"
 	project "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/project"
+	projectcodeowners "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectcodeowners"
 	projectinbounddatafilter "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectinbounddatafilter"
 	projectkey "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectkey"
 	projectownership "github.com/wildbitca/provider-upjet-sentry/internal/controller/cluster/project/projectownership"
@@ -58,6 +59,7 @@ func Setup_monolith(mgr ctrl.Manager, o controller.Options) error {
 		organizationrepository.Setup,
 		allprojectsspikeprotection.Setup,
 		project.Setup,
+		projectcodeowners.Setup,
 		projectinbounddatafilter.Setup,
 		projectkey.Setup,
 		projectownership.Setup,
@@ -96,6 +98,7 @@ func SetupGated_monolith(mgr ctrl.Manager, o controller.Options) error {
 		organizationrepository.SetupGated,
 		allprojectsspikeprotection.SetupGated,
 		project.SetupGated,
+		projectcodeowners.SetupGated,
 		projectinbounddatafilter.SetupGated,
 		projectkey.SetupGated,
 		projectownership.SetupGated,
@@ -133,6 +136,7 @@ func SetupWebhookWithManager_monolith(mgr ctrl.Manager) error {
 		organizationrepository.SetupWebhookWithManager,
 		allprojectsspikeprotection.SetupWebhookWithManager,
 		project.SetupWebhookWithManager,
+		projectcodeowners.SetupWebhookWithManager,
 		projectinbounddatafilter.SetupWebhookWithManager,
 		projectkey.SetupWebhookWithManager,
 		projectownership.SetupWebhookWithManager,

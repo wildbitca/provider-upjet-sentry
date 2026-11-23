@@ -102,7 +102,7 @@ spec:
                                 `event_frequency_count`, `event_frequency_percent`,
                                 `event_unique_user_frequency_count`, `event_unique_user_frequency_percent`,
                                 `percent_sessions_count`, `percent_sessions_percent`,
-                                and `seer_activity_trigger`.'
+                                `activity_type_in`, and `seer_activity_trigger`.'
                               type: string
                           type: object
                         type: array
@@ -494,7 +494,7 @@ spec:
                                 `event_frequency_count`, `event_frequency_percent`,
                                 `event_unique_user_frequency_count`, `event_unique_user_frequency_percent`,
                                 `percent_sessions_count`, `percent_sessions_percent`,
-                                and `seer_activity_trigger`.'
+                                `activity_type_in`, and `seer_activity_trigger`.'
                               type: string
                           type: object
                         type: array
@@ -961,7 +961,7 @@ spec:
                                 `event_frequency_count`, `event_frequency_percent`,
                                 `event_unique_user_frequency_count`, `event_unique_user_frequency_percent`,
                                 `percent_sessions_count`, `percent_sessions_percent`,
-                                and `seer_activity_trigger`.'
+                                `activity_type_in`, and `seer_activity_trigger`.'
                               type: string
                           type: object
                         type: array
